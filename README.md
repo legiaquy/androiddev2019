@@ -10,7 +10,7 @@ Students are expected to:
 Student Info
 =======================
 
-* Name: *YourNameHere*
-* ID: *YourIdHere*
-* Group ID: *Your Group ID here*
-* Project Name: *Your Project Name here*
+* Name: Lê Gia Anh Quý
+* ID: USTHBI7-133
+* Group ID: 4
+* Project Name: Wikipedia Client
