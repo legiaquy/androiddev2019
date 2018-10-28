@@ -1,4 +1,4 @@
-package usth.wikipedia;
+package com.usth.wikipedia;
 
 import android.app.Activity;
 import android.os.Bundle;
