@@ -106,7 +106,8 @@
                 android:layout_below="@+id/forgot_password"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="25dp"
-                android:text="@string/log_in_button" />
+                android:text="@string/log_in_button"
+                android:onClick="Log_in"/>
 
             <EditText
                 android:id="@+id/password"

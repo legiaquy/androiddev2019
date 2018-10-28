@@ -130,13 +130,14 @@
                 android:inputType="textEmailAddress" />
 
             <Button
-                android:id="@+id/button"
+                android:id="@+id/create_account"
                 android:layout_width="310dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/email"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="25dp"
-                android:text="@string/create_account_button" />
+                android:text="@string/create_account_button"
+                android:onClick="Handle_create_account"/>
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

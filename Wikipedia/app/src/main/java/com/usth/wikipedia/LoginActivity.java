@@ -1,12 +1,11 @@
 package com.usth.wikipedia;
 
+import android.app.Activity;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.TextView;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,5 +21,10 @@ public class LoginActivity extends AppCompatActivity {
     public void Forgot_password(View view) {
         Intent intent = new Intent(this, ForgotPasswordActivity.class);
         startActivity(intent);
+    }
+
+    public void Log_in(View view) {
+        Intent i = new Intent(LoginActivity.this,MainActivity.class);
+        startActivity(i);
     }
 }
