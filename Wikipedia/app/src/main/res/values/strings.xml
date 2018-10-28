@@ -3,4 +3,11 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="query_hint">Search Wikipedia</string>
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="random">Random Article</string>
+    <string name="random_article">The Statue of Liberty (Liberty Enlightening the World; French: La Liberté éclairant le monde) is a colossal neoclassical sculpture on Liberty Island in New York Harbor in New York City, in the United States. The copper statue, a gift from the people of France to the people of the United States, was designed by French sculptor Frédéric Auguste Bartholdi and built by Gustave Eiffel. The statue was dedicated on October 28, 1886. (Full article...)</string>
+    <string name="yesterday_article">Stephanus serrator is a species of parasitic wasp in the family Stephanidae, the crown wasps. This species is native to much of Europe and is to be seen in the breeding season on recently dead timber or wood products. The larvae are parasitoids of the larvae of wood-boring beetles. (Full article...) </string>
+    <string name="today_article">The 2009 World Series was the championship series of Major League Baseball\'s 2009 season. Opening on October 28, it was a best-of-seven playoff between the Philadelphia Phillies, champions of the National League and defending World Series champions, and the New York Yankees, champions of the American League. The Yankees (Full article...)</string>
 </resources>

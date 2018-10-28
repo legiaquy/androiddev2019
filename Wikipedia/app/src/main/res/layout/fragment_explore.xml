@@ -26,13 +26,22 @@
         android:typeface="serif"
         android:text="WIKIPEDIA"/>
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/search_bar"
+    <SearchView
+        android:id="@+id/search_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:elevation="2dp"
+        android:layout_below="@id/title"
+        android:layout_centerHorizontal="true"
+        android:queryHint="@string/query_hint"
+        android:background="#fff"/>
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginTop="5dp"
-        android:theme="@style/PageToolbarTheme"
-        android:layout_below="@+id/title"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/search_view"
+        android:layout_marginTop="16dp"/>
 
 
 
