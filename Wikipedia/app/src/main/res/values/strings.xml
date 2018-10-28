@@ -4,6 +4,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="query_hint">Search Wikipedia</string>
+    <string name="article1">Article 1</string>
+    <string name="article2">Article 2</string>
+    <string name="article3">Article 3</string>
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="random">Random Article</string>

@@ -1,9 +1,9 @@
 package com.usth.wikipedia;
 
 public enum ModelObject {
-    TODAY(R.string.today, R.layout.view_today),
-    YESTERDAY(R.string.yesterday, R.layout.view_yesterday),
-    RANDOM_ARTICLE(R.string.random, R.layout.view_random_article);
+    ARTICLE1(R.string.article1, R.layout.article1),
+    ARTICLE2(R.string.article2, R.layout.article2),
+    ARTICLE3(R.string.article3, R.layout.article3);
 
     private int mTitleResId;
     private int mLayoutResId;

@@ -3,6 +3,7 @@ package com.usth.wikipedia;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,13 +12,10 @@ import android.widget.SearchView;
 import android.widget.Toast;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ExploreFragment extends Fragment {
 
     SearchView searchView;
-    ViewPager viewPager;
+    ViewPager viewPager1, viewPager2, viewPager3;
 
     public ExploreFragment() {
         // Required empty public constructor
@@ -49,8 +47,16 @@ public class ExploreFragment extends Fragment {
             }
         });
 
-        viewPager = layout.findViewById(R.id.viewpager);
-        viewPager.setAdapter(new CustomPagerAdapter(inflater.getContext()));
+        viewPager1 = layout.findViewById(R.id.viewpager1);
+        viewPager1.setAdapter(new CustomPagerAdapter(inflater.getContext()));
+
+        viewPager2 = layout.findViewById(R.id.viewpager2);
+        viewPager2.setAdapter(new CustomPagerAdapter(inflater.getContext()));
+
+        viewPager3 = layout.findViewById(R.id.viewpager3);
+        viewPager3.setAdapter(new CustomPagerAdapter(inflater.getContext()));
+
+
         return layout;
     }
 
