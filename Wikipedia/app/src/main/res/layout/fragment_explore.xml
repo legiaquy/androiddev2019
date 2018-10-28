@@ -30,7 +30,8 @@
             android:text="WIKIPEDIA"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="25sp"
-            android:typeface="serif" />
+            android:typeface="serif"
+            android:textColor="@color/colorPrimary"/>
     </LinearLayout>
 
     <SearchView
@@ -56,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:text="TODAY"
                 android:textStyle="bold"
-                android:textColor="#1f54c7" />
+                android:textColor="@color/colorPrimary" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -77,7 +78,7 @@
                 android:layout_height="wrap_content"
                 android:text="YESTERDAY"
                 android:textStyle="bold"
-                android:textColor="#1f54c7"/>
+                android:textColor="@color/colorPrimary"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="280dp"
@@ -97,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:text="RANDOM ARTICLE"
                 android:textStyle="bold"
-                android:textColor="#1f54c7"/>
+                android:textColor="@color/colorPrimary"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
