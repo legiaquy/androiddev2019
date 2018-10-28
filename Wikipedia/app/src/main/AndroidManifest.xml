@@ -16,6 +16,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="usth.wikipedia.LoginActivity"></activity>
+        <activity android:name="usth.wikipedia.ForgotPasswordActivity"></activity>
+        <activity android:name="usth.wikipedia.CreateNewAccountActivity"></activity>
     </application>
 
 </manifest>
