@@ -14,7 +14,7 @@ public class LoginActivity extends Activity {
     }
 
     public void Create_new_account(View view) {
-        Intent intent = new Intent(this, CreateNewAccountActivity.class);
+        Intent intent = new Intent(this,CreateNewAccountActivity.class);
         startActivity(intent);
     }
 
