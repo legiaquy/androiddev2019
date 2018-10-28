@@ -1,89 +1,106 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:padding="10dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".ExploreFragment"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+    android:padding="10dp"
+    tools:context=".ExploreFragment">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
         <ImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/w_nav_mark"
             android:layout_gravity="center_horizontal"
             android:layout_marginRight="5dp"
-            android:contentDescription="Header" />
+            android:contentDescription="Header"
+            android:src="@drawable/w_nav_mark" />
 
         <TextView
             android:id="@+id/title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
+            android:text="WIKIPEDIA"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="25sp"
-            android:typeface="serif"
-            android:text="WIKIPEDIA"/>
+            android:typeface="serif" />
     </LinearLayout>
+
     <SearchView
         android:id="@+id/search_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:elevation="2dp"
         android:layout_gravity="center_horizontal"
-        android:queryHint="@string/query_hint"
-        android:background="#fff"/>
+        android:background="#fff"
+        android:elevation="2dp"
+        android:queryHint="@string/query_hint" />
 
-    <FrameLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="TODAY"/>
+        android:layout_height="wrap_content">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager1"
+        <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp"/>
-    </FrameLayout>
+            android:layout_height="wrap_content">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="YESTERDAY"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_gravity="center_horizontal">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp"/>
-    </FrameLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="TODAY" />
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="RANDOM ARTICLE"/>
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp" />
+            </LinearLayout>
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager3"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="16dp"/>
-    </FrameLayout>
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="YESTERDAY" />
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="RANDOM ARTICLE" />
+
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewpager3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="16dp" />
+            </FrameLayout>
+        </LinearLayout>
+    </ScrollView>
 </LinearLayout>

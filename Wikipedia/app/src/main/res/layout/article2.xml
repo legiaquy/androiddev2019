@@ -20,6 +20,8 @@
         android:layout_below="@+id/image_article"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
+        android:maxLines="4"
+        android:ellipsize="marquee"
         android:text="Animal"
         android:textSize="20dp"/>
 
@@ -28,6 +30,9 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_article"
         android:text="@string/yesterday_article"
+        android:maxLines="4"
+        android:ellipsize="end"
+
         android:layout_margin="16dp"/>
 
 

@@ -21,6 +21,8 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:text="The Statue Of Liberty"
+        android:maxLines="4"
+        android:ellipsize="marquee"
         android:textSize="20dp"/>
 
     <TextView
@@ -28,6 +30,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/title_article"
         android:text="@string/random_article"
+        android:maxLines="4"
+        android:ellipsize="end"
         android:layout_margin="16dp"/>
 
 </RelativeLayout>
