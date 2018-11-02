@@ -40,78 +40,139 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:background="#fff"
-        android:elevation="2dp"
+        android:elevation="5dp"
+        android:layout_margin="10dp"
         android:queryHint="@string/query_hint" />
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:fadeScrollbars="false">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="4dp">
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="TODAY"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_gravity="center_horizontal">
-
 
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewpager1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="280dp"
                     android:layout_marginTop="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:hint="Click to see detail"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:hint="Swipe >>>"/>
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="YESTERDAY"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_gravity="center_horizontal">
-
 
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewpager2"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="280dp"
                     android:layout_marginTop="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:hint="Click to see detail"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:hint="Swipe >>>"/>
+                </LinearLayout>
             </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
                 android:text="RANDOM ARTICLE"
-                android:textStyle="bold"
-                android:textColor="@color/colorPrimary"/>
+                android:textColor="@color/colorPrimary"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="280dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
                 android:layout_gravity="center_horizontal">
-
 
 
                 <android.support.v4.view.ViewPager
                     android:id="@+id/viewpager3"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="280dp"
                     android:layout_marginTop="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:hint="Click to see detail"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="end"
+                        android:hint="Swipe >>>"/>
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

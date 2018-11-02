@@ -1,37 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/image_article"
+        android:id="@+id/image_article3"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:src="@drawable/statue_liberty"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="16dp"/>
+        android:src="@drawable/image_article3"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="4dp"/>
 
     <TextView
-        android:id="@+id/title_article"
-        android:layout_width="wrap_content"
+        android:id="@+id/title_article3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/image_article"
-        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:text="The Statue Of Liberty"
-        android:maxLines="4"
-        android:ellipsize="marquee"
+        android:text="@string/title_article3"
         android:textSize="20dp"/>
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/content_article3"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/title_article"
-        android:text="@string/random_article"
-        android:maxLines="4"
-        android:ellipsize="end"
+        android:layout_gravity="center"
+        android:text="@string/content_article3"
         android:layout_margin="16dp"/>
 
-</RelativeLayout>
+</LinearLayout>
