@@ -7,31 +7,30 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/image_article1"
+        android:id="@+id/image_article3"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:src="@drawable/image_article1"
+        android:src="@drawable/statue_of_liberty"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="4dp"/>
 
     <TextView
-        android:id="@+id/title_article1"
+        android:id="@+id/title_article3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:layout_marginTop="16dp"
-        android:text="@string/title_article1"
+        android:text="@string/title_article3"
         android:textSize="20dp"/>
 
     <TextView
-        android:id="@+id/content_article1"
+        android:id="@+id/content_article3"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/content_article1"
+        android:text="@string/content_article3"
         android:maxLines="5"
         android:ellipsize="end"
         android:layout_margin="16dp"/>
-
 
 </LinearLayout>

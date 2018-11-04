@@ -23,7 +23,7 @@ public class CustomPagerAdapter extends PagerAdapter {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), DetailArticleActivity.class);
-                intent.putExtra(DetailArticleActivity.EXTRA_ARTICLENO, position);
+                intent.putExtra(DetailArticleActivity.EXTRA_ARTICLENO, position+1);
                 v.getContext().startActivity(intent);
             }
         });

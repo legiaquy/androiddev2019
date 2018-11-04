@@ -10,7 +10,7 @@
         android:id="@+id/image_article2"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:src="@drawable/image_article2"
+        android:src="@drawable/animal"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="4dp"/>
 
