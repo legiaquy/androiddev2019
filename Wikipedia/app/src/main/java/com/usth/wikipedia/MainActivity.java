@@ -12,15 +12,16 @@ import android.view.MenuItem;
 public class MainActivity extends AppCompatActivity {
 
     private static final String BACK_STACK_ROOT_TAG = "root_fragment";
+    private Fragment selectedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if(savedInstanceState == null){
-            Fragment fragment = new ExploreFragment();
+            selectedFragment = new ExploreFragment();
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, fragment);
+            transaction.replace(R.id.fragment_container, selectedFragment);
             transaction.addToBackStack(BACK_STACK_ROOT_TAG);
             transaction.commit();
         }

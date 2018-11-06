@@ -7,23 +7,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
+
 public class CustomPagerAdapter extends PagerAdapter {
 
     private Context mContext;
-    public CustomPagerAdapter(Context context) {
+    private ArrayList<ModelArticle> mListArticle;
+    public CustomPagerAdapter(Context context, ArrayList listArticle)
+    {
         mContext = context;
+        mListArticle = listArticle;
     }
 
     @Override
     public Object instantiateItem(final ViewGroup collection, final int position) {
-        ModelObject modelObject = ModelObject.values()[position];
+        final ModelArticle article = mListArticle.get(position);
         final LayoutInflater inflater = LayoutInflater.from(mContext);
-        ViewGroup layout = (ViewGroup) inflater.inflate(modelObject.getmLayoutResId(), collection, false);
+        ViewGroup layout = (ViewGroup) inflater.inflate(article.getOverview_layoutId(), collection, false);
         layout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(v.getContext(), DetailArticleActivity.class);
-                intent.putExtra(DetailArticleActivity.EXTRA_ARTICLENO, position+1);
+                intent.putExtra(DetailArticleActivity.EXTRA_ARTICLENO, article.getArticleId());
                 v.getContext().startActivity(intent);
             }
         });
@@ -38,7 +43,7 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     @Override
     public int getCount(){
-        return ModelObject.values().length;
+        return 3;
     }
 
     @Override
@@ -48,7 +53,7 @@ public class CustomPagerAdapter extends PagerAdapter {
 
     @Override
     public CharSequence getPageTitle(int position) {
-        ModelObject customPagerEnum = ModelObject.values()[position];
-        return mContext.getString(customPagerEnum.getmTitleResId());
+        ModelArticle customPagerEnum = mListArticle.get(position);
+        return customPagerEnum.getArticleTitle();
     }
 }
