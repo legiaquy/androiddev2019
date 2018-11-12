@@ -1,13 +1,10 @@
 package com.usth.wikipedia;
 
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,19 +12,12 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
-
 
 public class ExploreFragment extends Fragment {
 
     private SearchView searchView;
     private ViewPager viewPager1, viewPager2, viewPager3;
-    private ArrayList<ModelArticle> todayListArticle = new ArrayList<>();
-    private ArrayList<ModelArticle> yesterdayListArticle = new ArrayList<>();
-    private ArrayList<ModelArticle> randomListArticle = new ArrayList<>();
-    private Cursor articleCursor;
-    private SQLiteOpenHelper wikipediaDatabaseHelper;
-    private SQLiteDatabase db;
+    private FragmentPagerAdapter adapter1, adapter2, adapter3;
 
     public ExploreFragment() {
         // Required empty public constructor
@@ -36,92 +26,109 @@ public class ExploreFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-            }
+        if (savedInstanceState == null ) {
+            adapter1 = new ArticlePagerAdapter(getActivity().getSupportFragmentManager(), "today");
+            adapter2 = new ArticlePagerAdapter(getActivity().getSupportFragmentManager(), "yesterday");
+            adapter3 = new ArticlePagerAdapter(getActivity().getSupportFragmentManager(), "random");
+        } else {
+
+        }
+        Toast.makeText(getActivity(), "Ready", Toast.LENGTH_SHORT).show();
+    }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        final View layout = inflater.inflate(R.layout.fragment_explore, container, false);
         // Inflate the layout for this fragment
-        View layout = inflater.inflate(R.layout.fragment_explore, container, false);
-        searchView = layout.findViewById(R.id.search_view);
-
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(inflater.getContext(), query, Toast.LENGTH_SHORT).show();
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                Toast.makeText(inflater.getContext(), newText, Toast.LENGTH_LONG).show();
-                return false;
-            }
-        });
-        FindArticletask findArticletask = new FindArticletask();
-        findArticletask.execute(); // background thread to find new Article
+        viewPager3 = layout.findViewById(R.id.viewpager3);
+        viewPager3.setOffscreenPageLimit(2);
+        viewPager3.setAdapter(adapter3);
 
         viewPager1 = layout.findViewById(R.id.viewpager1);
-        viewPager1.setAdapter(new CustomPagerAdapter(inflater.getContext(), todayListArticle));
+        viewPager1.setOffscreenPageLimit(2);
+        viewPager1.setAdapter(adapter1);
 
         viewPager2 = layout.findViewById(R.id.viewpager2);
-        viewPager2.setAdapter(new CustomPagerAdapter(inflater.getContext(), yesterdayListArticle));
-
-        viewPager3 = layout.findViewById(R.id.viewpager3);
-        viewPager3.setAdapter(new CustomPagerAdapter(inflater.getContext(), randomListArticle));
-
+        viewPager2.setOffscreenPageLimit(2);
+        viewPager2.setAdapter(adapter2);
 
         return layout;
     }
 
-    private class FindArticletask extends AsyncTask<Void, Void, Boolean> {
 
-        protected Boolean doInBackground(Void ...params) {
-            try {
-                wikipediaDatabaseHelper = new WikipediaDatabaseHelper(getActivity());
-                db = wikipediaDatabaseHelper.getReadableDatabase();
-                String query = "SELECT _id, TITLE, OVERVIEW_LAYOUT_RESOURCE_ID from ARTICLE order by _id DESC limit 3";
-                articleCursor = db.rawQuery(query,null);
-                    if (articleCursor.moveToFirst()) {
-                        ModelArticle article1 = new ModelArticle(articleCursor.getInt(0), articleCursor.getString(1), articleCursor.getInt(2));
-                        todayListArticle.add(0,article1);
-                        articleCursor.moveToNext();
-                        ModelArticle article2 = new ModelArticle(articleCursor.getInt(0), articleCursor.getString(1), articleCursor.getInt(2));
-                        todayListArticle.add(1,article2);
-                        articleCursor.moveToNext();
-                        ModelArticle article3 = new ModelArticle(articleCursor.getInt(0), articleCursor.getString(1), articleCursor.getInt(2));
-                        todayListArticle.add(2,article3);
 
-                        yesterdayListArticle.add(0, article2);
-                        yesterdayListArticle.add(1, article3);
-                        yesterdayListArticle.add(2, article1);
+    public static class ArticlePagerAdapter extends FragmentPagerAdapter {
+        private static int NUM_ITEMS = 3;
+        private String category;
+
+        public ArticlePagerAdapter(FragmentManager fm, String category){
+            super(fm);
+            this.category = category;
+        }
+
+
+
+        @Override
+        public int getCount(){
+            return NUM_ITEMS;
+        }
+
+        @Override
+        public Fragment getItem(int position){
+            switch (category) {
+                case "random":
+                    switch (position) {
+                        case 0:
+                            return ArticleFragment.newInstance(category);
+                        case 1:
+                            return ArticleFragment.newInstance(category);
+                        case 2:
+                            return ArticleFragment.newInstance(category);
+                        default:
+                            return null;
                     }
-                    articleCursor.close();
-                String random_query = "SELECT _id, TITLE, OVERVIEW_LAYOUT_RESOURCE_ID from ARTICLE order by RANDOM() LIMIT 3";
-                articleCursor = db.rawQuery(random_query, null);
-                if (articleCursor.moveToFirst()) {
-                    ModelArticle article1 = new ModelArticle(articleCursor.getInt(0), articleCursor.getString(1), articleCursor.getInt(2));
-                    randomListArticle.add(0,article1);
-                    articleCursor.moveToNext();
-                    ModelArticle article2 = new ModelArticle(articleCursor.getInt(0), articleCursor.getString(1), articleCursor.getInt(2));
-                    randomListArticle.add(1,article2);
-                    articleCursor.moveToNext();
-                    ModelArticle article3 = new ModelArticle(articleCursor.getInt(0), articleCursor.getString(1), articleCursor.getInt(2));
-                    randomListArticle.add(2,article3);
-                }
-                    articleCursor.close();
-                    db.close();
-                    return true;
-                } catch (SQLiteException e) {
-                    return false;
+                case "today":
+                    switch (position) {
+                        case 0:
+                            return ArticleFragment.newInstance(category, "article1");
+                        case 1:
+                            return ArticleFragment.newInstance(category, "article2");
+                        case 2:
+                            return ArticleFragment.newInstance(category, "article3");
+                        default:
+                            return null;
+                    }
+                case "yesterday":
+                    switch (position) {
+                        case 0:
+                            return ArticleFragment.newInstance(category, "article1");
+                        case 1:
+                            return ArticleFragment.newInstance(category, "article2");
+                        case 2:
+                            return ArticleFragment.newInstance(category, "article3");
+                        default:
+                            return null;
+                    }
+                default:
+                    return null;
             }
         }
 
-        protected void onPostExecute(Boolean success) {
-            if(!success) {
-                Toast toast = Toast.makeText(getActivity(), "Get article from database unavailable", Toast.LENGTH_SHORT);
-                toast.show();
-            }
+        @Override
+        public long getItemId(int position){
+            return System.currentTimeMillis();
         }
+
+        @Override
+        public CharSequence getPageTitle(int position){
+            return "Article" + position;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+
+        super.onSaveInstanceState(savedInstanceState);
     }
 }

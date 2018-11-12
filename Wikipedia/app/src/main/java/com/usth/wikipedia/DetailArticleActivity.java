@@ -1,10 +1,7 @@
 package com.usth.wikipedia;
 
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteException;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,28 +12,57 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.Buffer;
+import java.util.Iterator;
+
 
 public class DetailArticleActivity extends AppCompatActivity implements View.OnClickListener {
-    public static final String EXTRA_ARTICLENO = "articleNo";
-    EditText detail_content_article;
-    ImageButton edit_button;
-    private Cursor articleCursor;
-    private SQLiteDatabase db;
-    private SQLiteOpenHelper wikipediaDatabaseHelper = new WikipediaDatabaseHelper(DetailArticleActivity.this);
+    public static final String EXTRA_ARTICLETITLE = "articleTitle";
+    private EditText detail_content_article, detail_description_article, detail_other1, detail_other2;
+    private ImageButton edit_button;
+    private ImageView detail_image_article;
+    private TextView detail_title_article, detail_category_article, detail_alias_article;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail_article);
+        detail_title_article = findViewById(R.id.detail_title_article);
+        detail_category_article = findViewById(R.id.detail_category_article);
+        detail_alias_article = findViewById(R.id.detail_alias_article);
+        detail_content_article = findViewById(R.id.detail_content_article);
+        detail_description_article = findViewById(R.id.detail_description_article);
+        detail_image_article = findViewById(R.id.detail_image_article);
 
-        int articleNo = (Integer) getIntent().getExtras().get(EXTRA_ARTICLENO); // Get article's row ID
-        new ShowArticleTask().execute(articleNo); // background thread to find and display detail article from database
+
+        String articleTitle = (String) getIntent().getExtras().get(EXTRA_ARTICLETITLE); // Get article's row ID
+        ShowArticleTask process = new ShowArticleTask();
+        process.execute(articleTitle); // background thread to find and display detail article from database
 
         // Edit button
-        detail_content_article = findViewById(R.id.detail_content_article);
+
         detail_content_article.setEnabled(false);
+        detail_description_article.setEnabled(false);
+        detail_other1 = findViewById(R.id.detail_other1_article);
+        detail_other1.setEnabled(false);
+        detail_other2 = findViewById(R.id.detail_other2_article);
+        detail_other2.setEnabled(false);
         edit_button = findViewById(R.id.edit_button);
         edit_button.setOnClickListener(this);
+
+        overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out);
     }
 
     // This method is called when edit button is clicked
@@ -56,95 +82,121 @@ public class DetailArticleActivity extends AppCompatActivity implements View.OnC
         if (detail_content_article.isEnabled()) {
             detail_content_article.setEnabled(false);
             edit_button.setImageResource(R.drawable.ic_edit_black_24dp);
-            int articleNo = (Integer) getIntent().getExtras().get(EXTRA_ARTICLENO);
-            new UpdateContentTask().execute(articleNo);
+//            String articleTitle = (String) getIntent().getExtras().get(EXTRA_ARTICLETITLE);
+//            new UpdateContentTask().execute(articleTitle);
         } else {
             detail_content_article.setEnabled(true);
+            detail_content_article.requestFocus();
             edit_button.setImageResource(R.drawable.ic_done_black_24dp);
         }
     }
 
+    private class ShowArticleTask extends AsyncTask<String, Void, Boolean> {
 
-    // Background thread to find & display detail article from database
-    private class ShowArticleTask extends AsyncTask<Integer, Void, Boolean> {
+        private String parseContent, parseDescription = "Null", parseTitle, parseCategory, parseAlias = "Null";
+        private URL parseImage, originURL;
+        private Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.no_img);
 
-        protected Boolean doInBackground(Integer... articles) { // "Integer... articles": Array parameter
-            int articleNo = articles[0];
+        protected Boolean doInBackground(String... articles) { // "Integer... articles": Array parameter
+            String articleTitle = articles[0];
             try {
-                db = wikipediaDatabaseHelper.getReadableDatabase();
-
-                // Use cursor to query related article
-                articleCursor = db.query(
-                                "ARTICLE",
-                                new String[]{"TITLE", "CONTENT", "IMAGE_RESOURCE_ID"},
-                                "_id = ?",
-                                new String[] {Integer.toString(articleNo)},
-                                null, null, null);
-
-                // Although there is only one query, still need to navigate the cursor
-                if (articleCursor.moveToFirst()) {
-
-                    //Get the article's detail from the cursor
-                    String titleText = articleCursor.getString(0);
-                    String contentText = articleCursor.getString(1);
-                    int imageId = articleCursor.getInt(2);
-
-                    // Show the article's image
-                    ImageView detail_image_article = findViewById(R.id.detail_image_article);
-                    detail_image_article.setImageResource(imageId);
-                    detail_image_article.setContentDescription(titleText);
-
-                    // Show the article's title
-                    TextView detail_title_article = findViewById(R.id.detail_title_article);
-                    detail_title_article.setText(titleText);
-
-                    // Show the article's content
-                    EditText detail_content_article = findViewById(R.id.detail_content_article);
-                    detail_content_article.setText(contentText);
+                // Connect to wikipedia API
+                originURL = new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages|description|pageterms|categories&exintro&explaintext&redirects=1&piprop=thumbnail&pithumbsize=600&titles="+articleTitle);
+                HttpURLConnection httpURLConnection = (HttpURLConnection) originURL.openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = "";
+                parseContent = "";
+                while(line != null) {
+                    line = bufferedReader.readLine();
+                    parseContent = parseContent + line;
                 }
-                db.close();
-                return true;
-            } catch (SQLiteException e) {
+
+                // Get content, image, description object
+                JSONObject JO = new JSONObject(parseContent);
+                JSONObject query = JO.getJSONObject("query");
+                JSONObject pages = query.getJSONObject("pages");
+                Iterator<String> keys = pages.keys();
+                String id = keys.next();
+                JSONObject idJSONObject = pages.getJSONObject(id);
+                JSONArray categories = idJSONObject.getJSONArray("categories");
+                JSONObject catObject = categories.getJSONObject(0);
+                if(!idJSONObject.isNull("thumbnail")) {
+                    JSONObject thumbnail = idJSONObject.getJSONObject("thumbnail");
+                    parseImage = new URL(thumbnail.getString("source"));
+                    bmp = BitmapFactory.decodeStream(parseImage.openConnection().getInputStream());
+                }
+                JSONObject terms = idJSONObject.getJSONObject("terms");
+
+                // Parse content, image, description
+                if(!terms.isNull("alias")) {
+                    JSONArray alias = terms.getJSONArray("alias");
+                    parseAlias = alias.getString(0);
+                }
+
+                if(!idJSONObject.isNull("description")) {
+                    parseDescription = idJSONObject.getString("description");
+                }
+                parseTitle = idJSONObject.getString("title");
+                parseContent = idJSONObject.getString("extract");
+                parseCategory = catObject.optString("title");
+
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+                return false;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return false;
+            } catch (JSONException e) {
+                e.printStackTrace();
                 return false;
             }
-        }
-
-        protected void onPostExecute(Boolean success) {
-            if(!success) {
-                Toast toast = Toast.makeText(DetailArticleActivity.this, "Get article from database unavailable", Toast.LENGTH_SHORT);
-                toast.show();
-            }
-        }
-    }
-
-    // Update the database after editing
-    private class UpdateContentTask extends AsyncTask<Integer, Void, Boolean> {
-        ContentValues articleValues;
-
-        protected void onPreExecute() {
-            EditText contentText = findViewById(R.id.detail_content_article);
-            articleValues = new ContentValues();
-            articleValues.put("CONTENT", contentText.getText().toString());
-        }
-
-        protected Boolean doInBackground(Integer... articles) {
-            int articleNo = articles[0];
-            try {
-                db = wikipediaDatabaseHelper.getWritableDatabase();
-                db.update("ARTICLE", articleValues, "_id = ?", new String[]{Integer.toString(articleNo)});
-                return true;
-            } catch (SQLiteException e) {
-                return false;
-            }
+            return true;
         }
 
         protected void onPostExecute(Boolean success) {
             if (!success) {
-                Toast toast = Toast.makeText(DetailArticleActivity.this, "Update content in database unavailable", Toast.LENGTH_SHORT);
-                toast.show();
+            Toast.makeText(DetailArticleActivity.this, "Error network", Toast.LENGTH_SHORT).show();
+            } else {
+                detail_title_article.setText(parseTitle);
+
+                detail_category_article.setText(parseCategory);
+
+                detail_alias_article.setText(parseAlias);
+
+                detail_content_article.setText(parseContent);
+
+                detail_image_article.setImageBitmap(bmp);
+
+                detail_description_article.setText(parseDescription);
+
             }
         }
     }
+
+
+    // Update the database after editing
+//    private class UpdateContentTask extends AsyncTask<String, Void, Boolean> {
+//
+//
+//        protected void onPreExecute() {
+//
+//        }
+//
+//        protected Boolean doInBackground(String... articles) {
+//            String articleTitle = articles[0];
+//            try {
+//
+//            }
+//        }
+//
+//        protected void onPostExecute(Boolean success) {
+//            if (!success) {
+//
+//            }
+//        }
+//    }
 
     protected void onRestart() {
         super.onRestart();
@@ -152,8 +204,6 @@ public class DetailArticleActivity extends AppCompatActivity implements View.OnC
 
     protected void onDestroy() {
         super.onDestroy();
-        db.close();
-        articleCursor.close();
     }
 }
 

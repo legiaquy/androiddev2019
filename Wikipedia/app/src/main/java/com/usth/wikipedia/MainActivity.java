@@ -1,61 +1,68 @@
 package com.usth.wikipedia;
 
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.MenuItem;
 
-
 public class MainActivity extends AppCompatActivity {
-
-    private static final String BACK_STACK_ROOT_TAG = "root_fragment";
-    private Fragment selectedFragment;
+    private final Fragment exploreFragment = new ExploreFragment();
+    private final Fragment savedFragment = new SavedFragment();
+    private final Fragment historyFragment = new HistoryFragment();
+    private final Fragment searchFragment = new SearchFragment();
+    private final Fragment settingsFragment = new SettingsFragment();
+    private final FragmentManager fm = getSupportFragmentManager();
+    private Fragment active = exploreFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if(savedInstanceState == null){
-            selectedFragment = new ExploreFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, selectedFragment);
-            transaction.addToBackStack(BACK_STACK_ROOT_TAG);
-            transaction.commit();
-        }
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_navigation);
-        bottomNav.setOnNavigationItemSelectedListener(navListener);
+        BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
+        navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        fm.beginTransaction().add(R.id.fragment_container, settingsFragment, "5").hide(settingsFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, searchFragment, "4").hide(searchFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, savedFragment, "3").hide(savedFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, historyFragment, "2").hide(historyFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, exploreFragment, "1").commit();
+
     }
+    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
+            = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
-    private BottomNavigationView.OnNavigationItemSelectedListener navListener =
-            new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                    Fragment selectedFragment = null;
-
-                    switch (item.getItemId()) {
-                        case R.id.nav_explore:
-                            selectedFragment = new ExploreFragment();
-                            break;
-                        case R.id.nav_saved:
-                            selectedFragment = new SavedFragment();
-                            break;
-                        case R.id.nav_history:
-                            selectedFragment = new HistoryFragment();
-                            break;
-                        case R.id.nav_search:
-                            selectedFragment = new SearchFragment();
-                            break;
-                        case R.id.nav_settings:
-                            selectedFragment = new SettingsFragment();
-                    }
-
-                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, selectedFragment)
-                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE).addToBackStack(BACK_STACK_ROOT_TAG).commit();
-
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.nav_explore:
+                    fm.beginTransaction().hide(active).show(exploreFragment).commit();
+                    active = exploreFragment;
                     return true;
-                }
-            };
+
+                case R.id.nav_history:
+                    fm.beginTransaction().hide(active).show(historyFragment).commit();
+                    active = historyFragment;
+                    return true;
+
+                case R.id.nav_saved:
+                    fm.beginTransaction().hide(active).show(savedFragment).commit();
+                    active = savedFragment;
+                    return true;
+                case R.id.nav_search:
+                    fm.beginTransaction().hide(active).show(searchFragment).commit();
+                    active = searchFragment;
+                    return true;
+                case R.id.nav_settings:
+                    fm.beginTransaction().hide(active).show(settingsFragment).commit();
+                    active = settingsFragment;
+                    return true;
+            }
+            return false;
+        }
+    };
+
+
 }

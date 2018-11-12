@@ -34,4 +34,9 @@
         instructions via email</string>
     <string name="or">Or</string>
     <string name="reset_button">Reset</string>
+    <string name="edit_button">Edit</string>
+    <string name="description">Description</string>
+    <string name="other">Other</string>
+    <string name="None">Null</string>
+    <string name="full_article">full article</string>
 </resources>
