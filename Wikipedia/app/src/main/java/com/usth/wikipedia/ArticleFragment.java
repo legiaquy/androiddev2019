@@ -169,8 +169,8 @@ public class ArticleFragment extends Fragment {
 
         protected void onPreExecute(){
             dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            today = dateFormat.format(getDate(-1)).split("/");
-            yesterday = dateFormat.format(getDate(-2)).split("/");
+            today = dateFormat.format(getDate(-2)).split("/");
+            yesterday = dateFormat.format(getDate(-3)).split("/");
         }
 
         protected Boolean doInBackground(String... articles) {

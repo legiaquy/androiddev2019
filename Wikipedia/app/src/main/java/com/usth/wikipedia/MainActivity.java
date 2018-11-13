@@ -25,9 +25,9 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         fm.beginTransaction().add(R.id.fragment_container, settingsFragment, "5").hide(settingsFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, searchFragment, "4").hide(searchFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, savedFragment, "3").hide(savedFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, historyFragment, "2").hide(historyFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, savedFragment, "4").hide(savedFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, historyFragment, "3").hide(historyFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, searchFragment, "2").hide(searchFragment).commit();
         fm.beginTransaction().add(R.id.fragment_container, exploreFragment, "1").commit();
 
     }
