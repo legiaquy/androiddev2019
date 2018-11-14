@@ -2,22 +2,27 @@ package com.usth.wikipedia;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class ListViewAdapter extends BaseAdapter {
     Context mContext;
+    LayoutInflater mInflate;
     ArrayList<ArticleRepo> mArticleRepo;
     ArrayList<ArticleRepo> mArrayList;
 
     public ListViewAdapter(Context context, ArrayList<ArticleRepo> articleRepo) {
         mContext = context;
+        mInflate = LayoutInflater.from(context);
         mArticleRepo = articleRepo;
         mArrayList = new ArrayList<>();
         mArrayList.addAll(articleRepo);
@@ -39,21 +44,44 @@ public class ListViewAdapter extends BaseAdapter {
         return position;
     }
 
-    public View getView(final int position, View view, ViewGroup parent) {
-        View row;
-        if (view == null) {
-            LayoutInflater inflater = ((Activity) mContext).getLayoutInflater();
-            row = inflater.inflate(R.layout.article_list, parent, false);
+    public static class ViewHolder {
+        TextView name;
+        TextView description;
+        ImageView image;
+        LinearLayout item;
+    }
+
+    public View getView(final int position, View convertView, ViewGroup parent) {
+        final ViewHolder holder;
+        if(convertView == null) {
+            holder = new ViewHolder();
+            convertView = mInflate.inflate(R.layout.article_list, parent, false);
+            holder.name = convertView.findViewById(R.id.list_title);
+            holder.description = convertView.findViewById(R.id.list_description);
+            holder.image = convertView.findViewById(R.id.list_image);
+            holder.item = convertView.findViewById(R.id.list_item);
+            convertView.setTag(holder);
         } else {
-            row = view;
+            holder = (ViewHolder) convertView.getTag();
         }
-        //Set the results into ListView
-        TextView mName = row.findViewById(R.id.list_title);
-        TextView mDescription = row.findViewById(R.id.list_description);
-        ImageView mImage = row.findViewById(R.id.list_image);
-        mName.setText(mArticleRepo.get(position).getName());
-        mDescription.setText(mArticleRepo.get(position).getDescription());
-        mImage.setImageBitmap(mArticleRepo.get(position).getImage());
-        return row;
+        holder.name.setText(mArticleRepo.get(position).getName());
+        holder.description.setText(mArticleRepo.get(position).getDescription());
+        holder.image.setImageBitmap(mArticleRepo.get(position).getImage());
+        holder.item.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(v.getContext(), DetailArticleActivity.class);
+                intent.putExtra(DetailArticleActivity.EXTRA_ARTICLETITLE, holder.name.getText());
+                v.getContext().startActivity(intent);
+            }
+        });
+
+        return convertView;
+    }
+
+    //     Filter Class
+    public void filter() {
+        mArticleRepo.clear();
+        notifyDataSetChanged();
     }
 }

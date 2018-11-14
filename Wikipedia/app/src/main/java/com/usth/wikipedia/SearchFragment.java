@@ -14,7 +14,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.SearchView;
+import android.support.v7.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +38,7 @@ import java.util.Locale;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
+public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener{
 
     private ListView list;
     private ListViewAdapter adapter;
@@ -46,7 +46,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     private String[] articleNameList;
     private Bitmap[] articleImageList;
     private String[] articleDescriptionList;
-    private ArrayList<ArticleRepo> arrayList;
+    private ArrayList<ArticleRepo> arrayList = new ArrayList<>(5);
     private String parseTitle; // Key exchange
 
     public SearchFragment() {
@@ -60,49 +60,42 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
         // Locate the SearchView
-        searchView = view.findViewById(R.id.search_view);
-        // Generate sample data
+
+        // ListView
         list = view.findViewById(R.id.list_article);
-        arrayList = new ArrayList<>();
-        searchView.setOnQueryTextListener(this);
+
+        final ArticleRepo example = new ArticleRepo("Example", "Ex", BitmapFactory.decodeResource(getResources(), R.drawable.no_img));
+        arrayList.add(example);
+
         adapter = new ListViewAdapter(view.getContext(), arrayList);
 
         // Binds the Adapter to the ListView
         list.setAdapter(adapter);
+
+
+        searchView = view.findViewById(R.id.search_view);
+        searchView.setIconifiedByDefault(false);
+        searchView.setOnQueryTextListener(this);
 
         return view;
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        adapter.filter();
+        SearchArticleTask process = new SearchArticleTask();
+        process.execute(query);
+        return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
-        String text = newText;
-        SearchArticleTask process = new SearchArticleTask();
-        process.execute(text);
-//        adapter.filter(text);
-        return false;
+        adapter.filter();
+        return true;
     }
 
 
-    // Filter Class
-//        public void filter(String charText) {
-//            charText = charText.toLowerCase(Locale.getDefault());
-//            mArticleRepo.clear();
-//            if (charText.length() == 0) {
-//                mArticleRepo.clear();
-//            } else {
-//                for (ArticleRepo wp : mArrayList) {
-//                    if (wp.getName().toLowerCase(Locale.getDefault()).contains(charText)) {
-//                        mArticleRepo.add(wp);
-//                    }
-//                }
-//            }
-//            notifyDataSetChanged();
-//        }
+
 
     private class SearchArticleTask extends AsyncTask<String, Void, Boolean> {
         private String parseContent;
@@ -110,7 +103,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         private Bitmap bmp;
 
         protected void onPreExecute() {
-            arrayList = new ArrayList<>();
             articleNameList = new String[5];
             articleDescriptionList = new String[5];
             articleImageList = new Bitmap[5];
@@ -168,14 +160,14 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             if (!success) {
                 Toast.makeText(getActivity(), "Error network!", Toast.LENGTH_SHORT).show();
             } else {
-
-                for (int i = 0; i < articleNameList.length; i++) {
-                    ArticleRepo articleRepo = new ArticleRepo(articleNameList[i], articleDescriptionList[i], articleImageList[i]);
+                int j = 0;
+                while (j<5) {
+                    ArticleRepo articleRepo = new ArticleRepo(articleNameList[j], articleDescriptionList[j], articleImageList[j]);
                     //Binds all object into an array
                     arrayList.add(articleRepo);
+                    adapter.notifyDataSetChanged();
+                    j++;
                 }
-                adapter.notifyDataSetChanged();
-
             }
         }
     }
