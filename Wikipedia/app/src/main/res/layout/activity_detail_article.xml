@@ -22,7 +22,6 @@
                 android:gravity="center"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold"
-                android:text="Test"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
                 android:layout_marginTop="4dp"/>
@@ -31,7 +30,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Test"
                 android:paddingStart="14dp"
                 android:paddingEnd="14dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
@@ -114,6 +112,7 @@
                 android:textStyle="bold"
                 android:layout_alignParentStart="true"
                 android:layout_marginEnd="15dp"
+                android:layout_marginTop="15dp"
                 android:layout_below="@id/detail_alias_article"/>
             <EditText
                 android:id="@+id/detail_description_article"
@@ -126,51 +125,9 @@
                 android:textAppearance="?android:attr/textAppearanceSmall"
                 android:textColor="@android:color/black"
                 android:textAlignment="center"
+                android:layout_alignTop="@id/description_text"
                 android:layout_marginBottom="10dp"/>
-            <TextView
-                android:id="@+id/other1_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/other"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textStyle="bold"
-                android:layout_marginEnd="15dp"
-                android:layout_below="@id/detail_description_article" />
-            <EditText
-                android:id="@+id/detail_other1_article"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_toEndOf="@+id/other1_text"
-                android:layout_centerVertical="true"
-                android:background="@android:color/transparent"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textColor="@android:color/black"
-                android:text="@string/None"
-                android:textAlignment="center"
-                android:layout_below="@id/detail_description_article"/>
-            <TextView
-                android:id="@+id/other2_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/other"
-                android:textAppearance="?android:attr/textAppearanceSmall"
-                android:textStyle="bold"
-                android:layout_alignParentStart="true"
-                android:layout_marginEnd="15dp"
-                android:layout_below="@id/detail_other1_article"/>
-            <EditText
-                android:id="@+id/detail_other2_article"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_toEndOf="@+id/other2_text"
-                android:background="@android:color/transparent"
-                android:layout_below="@id/detail_other1_article"
-                android:text="@string/None"
-                android:textColor="@android:color/black"
-                android:textAlignment="center"
-                android:textAppearance="?android:attr/textAppearanceSmall"/>
+
         </RelativeLayout>
 
         <EditText

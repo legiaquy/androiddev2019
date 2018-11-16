@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+
 public class MainActivity extends AppCompatActivity {
     private final Fragment exploreFragment = new ExploreFragment();
     private final Fragment savedFragment = new SavedFragment();
@@ -24,11 +25,12 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        fm.beginTransaction().add(R.id.fragment_container, settingsFragment, "5").hide(settingsFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, savedFragment, "4").hide(savedFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, historyFragment, "3").hide(historyFragment).commit();
-        fm.beginTransaction().add(R.id.fragment_container, searchFragment, "2").hide(searchFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, searchFragment, "5").hide(searchFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, settingsFragment, "4").hide(settingsFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, savedFragment, "3").hide(savedFragment).commit();
+        fm.beginTransaction().add(R.id.fragment_container, historyFragment, "2").hide(historyFragment).commit();
         fm.beginTransaction().add(R.id.fragment_container, exploreFragment, "1").commit();
+
 
     }
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

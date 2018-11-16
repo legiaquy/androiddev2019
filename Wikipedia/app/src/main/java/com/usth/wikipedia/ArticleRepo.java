@@ -1,11 +1,17 @@
 package com.usth.wikipedia;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 public class ArticleRepo {
     private String articleName;
     private String articleDescription;
     private Bitmap articleImage;
+
+    public ArticleRepo(String articleName){
+        this.articleName = articleName;
+    }
 
     public ArticleRepo(String articleName, String articleDescription, Bitmap articleImage){
         this.articleName = articleName;

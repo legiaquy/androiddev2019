@@ -23,13 +23,12 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.nio.Buffer;
 import java.util.Iterator;
 
 
 public class DetailArticleActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_ARTICLETITLE = "articleTitle";
-    private EditText detail_content_article, detail_description_article, detail_other1, detail_other2;
+    private EditText detail_content_article, detail_description_article;
     private ImageButton edit_button;
     private ImageView detail_image_article;
     private TextView detail_title_article, detail_category_article, detail_alias_article;
@@ -55,10 +54,6 @@ public class DetailArticleActivity extends AppCompatActivity implements View.OnC
 
         detail_content_article.setEnabled(false);
         detail_description_article.setEnabled(false);
-        detail_other1 = findViewById(R.id.detail_other1_article);
-        detail_other1.setEnabled(false);
-        detail_other2 = findViewById(R.id.detail_other2_article);
-        detail_other2.setEnabled(false);
         edit_button = findViewById(R.id.edit_button);
         edit_button.setOnClickListener(this);
 
@@ -86,16 +81,15 @@ public class DetailArticleActivity extends AppCompatActivity implements View.OnC
 //            new UpdateContentTask().execute(articleTitle);
         } else {
             detail_content_article.setEnabled(true);
-            detail_content_article.requestFocus();
             edit_button.setImageResource(R.drawable.ic_done_black_24dp);
         }
     }
 
     private class ShowArticleTask extends AsyncTask<String, Void, Boolean> {
 
-        private String parseContent, parseDescription = "Null", parseTitle, parseCategory, parseAlias = "Null";
+        private String parseContent, parseDescription, parseTitle, parseCategory, parseAlias;
         private URL parseImage, originURL;
-        private Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.no_img);
+        private Bitmap bmp;
 
         protected Boolean doInBackground(String... articles) { // "Integer... articles": Array parameter
             String articleTitle = articles[0];
@@ -119,28 +113,40 @@ public class DetailArticleActivity extends AppCompatActivity implements View.OnC
                 Iterator<String> keys = pages.keys();
                 String id = keys.next();
                 JSONObject idJSONObject = pages.getJSONObject(id);
-                JSONArray categories = idJSONObject.getJSONArray("categories");
-                JSONObject catObject = categories.getJSONObject(0);
+
+
+
+
+                // Parse content, image, description
+                parseTitle = idJSONObject.getString("title");
+                parseContent = idJSONObject.getString("extract");
                 if(!idJSONObject.isNull("thumbnail")) {
                     JSONObject thumbnail = idJSONObject.getJSONObject("thumbnail");
                     parseImage = new URL(thumbnail.getString("source"));
                     bmp = BitmapFactory.decodeStream(parseImage.openConnection().getInputStream());
+                } else {
+                    bmp = BitmapFactory.decodeResource(getResources(), R.drawable.no_img);
+                }
+                if(!idJSONObject.isNull("categories")) {
+                    JSONArray categories = idJSONObject.getJSONArray("categories");
+                    JSONObject catObject = categories.getJSONObject(0);
+                    parseCategory = catObject.optString("title");
+                } else {
+                    parseCategory = "";
+                }
+                if(!idJSONObject.isNull("description")) {
+                    parseDescription = idJSONObject.getString("description");
+                } else {
+                    parseDescription = "None";
                 }
                 JSONObject terms = idJSONObject.getJSONObject("terms");
 
-                // Parse content, image, description
                 if(!terms.isNull("alias")) {
                     JSONArray alias = terms.getJSONArray("alias");
                     parseAlias = alias.getString(0);
+                } else {
+                    parseAlias = "";
                 }
-
-                if(!idJSONObject.isNull("description")) {
-                    parseDescription = idJSONObject.getString("description");
-                }
-                parseTitle = idJSONObject.getString("title");
-                parseContent = idJSONObject.getString("extract");
-                parseCategory = catObject.optString("title");
-
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();

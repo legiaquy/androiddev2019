@@ -30,6 +30,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -123,9 +124,9 @@ public class ArticleFragment extends Fragment {
                 JSONArray items = JO.getJSONArray("items");
                 JSONObject articlesObject = items.getJSONObject(0);
                 JSONArray articlesArray = articlesObject.getJSONArray("articles");
-                JSONObject Article1 = articlesArray.getJSONObject(2);
-                JSONObject Article2 = articlesArray.getJSONObject(3);
-                JSONObject Article3 = articlesArray.getJSONObject(4);
+                JSONObject Article1 = articlesArray.getJSONObject(984);
+                JSONObject Article2 = articlesArray.getJSONObject(985);
+                JSONObject Article3 = articlesArray.getJSONObject(986);
 
                 title1 = Article1.getString("article");
                 title2 = Article2.getString("article");
@@ -136,28 +137,18 @@ public class ArticleFragment extends Fragment {
         }
 
         protected void ParseContent(URL url) {
-            HttpURLConnection httpURLConnection = null;
             try {
-                httpURLConnection = (HttpURLConnection) url.openConnection();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            InputStream inputStream = null;
-            try {
-                inputStream = httpURLConnection.getInputStream();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
-            String line = "";
-            parseContent = "";
-            while (line != null) {
-                try {
+                URLConnection httpURLConnection = url.openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+                String line = "";
+                parseContent = "";
+                while (line != null) {
                     line = bufferedReader.readLine();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    parseContent = parseContent + line;
                 }
-                parseContent = parseContent + line;
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
 
@@ -178,12 +169,12 @@ public class ArticleFragment extends Fragment {
             String articleTitle = articles[1];
             String url = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages|description|pageterms|categories&exintro&explaintext&redirects=1&piprop=thumbnail&pithumbsize=600&titles=";
             try {
-                switch(articleCategory) {
+                switch (articleCategory) {
                     case "random":
                         originURL = new URL("https://en.wikipedia.org/w/api.php?%20format=json&action=query&prop=extracts|pageimages|pageterms|categories&exsentences=20&exintro&explaintext=&generator=random&grnnamespace=0&piprop=thumbnail&pithumbsize=600");
                         break;
                     case "today":
-                        originURL = new URL("https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/"+today[0]+"/"+today[1]+"/"+today[2]);
+                        originURL = new URL("https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/" + today[0] + "/" + today[1] + "/" + today[2]);
                         ParseContent(originURL); // parse json content from origin url
                         FindTitle(); // find article's title in json content
                         if (articleTitle.equals("article1")) {
@@ -195,7 +186,7 @@ public class ArticleFragment extends Fragment {
                         }
                         break;
                     case "yesterday":
-                        originURL = new URL("https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/"+yesterday[0]+"/"+yesterday[1]+"/"+yesterday[2]);
+                        originURL = new URL("https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/" + yesterday[0] + "/" + yesterday[1] + "/" + yesterday[2]);
                         ParseContent(originURL); // parse json content from origin url
                         FindTitle(); // find article's title in json content
                         if (articleTitle.equals("article1")) {
@@ -214,15 +205,23 @@ public class ArticleFragment extends Fragment {
                 String id = keys.next();
                 JSONObject idJSONObject = pages.getJSONObject(id);
 
-                if(!idJSONObject.isNull("thumbnail")) {
+                if (!idJSONObject.isNull("thumbnail")) {
                     JSONObject thumbnail = idJSONObject.getJSONObject("thumbnail");
                     parseImage = new URL(thumbnail.getString("source"));
                     bmp = BitmapFactory.decodeStream(parseImage.openConnection().getInputStream());
                 }
 
-                parseTitle = idJSONObject.getString("title");
-                parseContent = idJSONObject.getString("extract");
+                if (!idJSONObject.isNull("title")) {
+                    parseTitle = idJSONObject.getString("title");
+                } else {
+                    parseTitle = "No title";
+                }
 
+                if(!idJSONObject.isNull("extract")) {
+                    parseContent = idJSONObject.getString("extract");
+                } else {
+                    parseContent = "There is no information";
+                }
 
 
             } catch (MalformedURLException e) {

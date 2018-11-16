@@ -34,11 +34,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
+import javax.net.ssl.HttpsURLConnection;
+
 
 /**
  * A simple {@link Fragment} subclass.
  */
-public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener{
+public class SearchFragment extends Fragment implements SearchView.OnQueryTextListener {
 
     private ListView list;
     private ListViewAdapter adapter;
@@ -47,7 +49,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     private Bitmap[] articleImageList;
     private String[] articleDescriptionList;
     private ArrayList<ArticleRepo> arrayList = new ArrayList<>(5);
-    private String parseTitle; // Key exchange
 
     public SearchFragment() {
         // Required empty public constructor
@@ -59,19 +60,20 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
-        // Locate the SearchView
+
+
 
         // ListView
         list = view.findViewById(R.id.list_article);
 
         final ArticleRepo example = new ArticleRepo("Example", "Ex", BitmapFactory.decodeResource(getResources(), R.drawable.no_img));
-        arrayList.add(example);
+        arrayList.add(example); // Add a temporary item in arrayList to prevent null array
 
         adapter = new ListViewAdapter(view.getContext(), arrayList);
+        adapter.filter(); // Clear arrayList
 
         // Binds the Adapter to the ListView
         list.setAdapter(adapter);
-
 
         searchView = view.findViewById(R.id.search_view);
         searchView.setIconifiedByDefault(false);
@@ -82,9 +84,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        adapter.filter();
-        SearchArticleTask process = new SearchArticleTask();
+        adapter.filter(); // Clear
+        SearchArticleTask process = new SearchArticleTask(); // Search article in background
         process.execute(query);
+        searchView.clearFocus();
         return true;
     }
 
@@ -95,12 +98,72 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     }
 
 
-
-
     private class SearchArticleTask extends AsyncTask<String, Void, Boolean> {
         private String parseContent;
-        private URL parseImage, originURL;
-        private Bitmap bmp;
+        private URL originURL;
+
+        private class Info {
+            private String desc;
+            private Bitmap bmp;
+
+            public Info(Bitmap bmp, String desc) {
+                this.desc = desc;
+                this.bmp = bmp;
+            }
+
+            public Bitmap getBmp() {
+                return bmp;
+            }
+
+            public String getDesc() {
+                return desc;
+            }
+        }
+
+        private Info parseInfo(String title) {
+            Info info;
+            String json, desc = "";
+            URL originURL;
+            URL imageUrl;
+            Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.no_img);
+            JSONObject idJSONObject;
+            try {
+                originURL = new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=pageimages|description&exintro&explaintext&redirects=1&piprop=thumbnail&pithumbsize=200&titles="+title);
+                HttpURLConnection httpURLConnection =(HttpURLConnection) originURL.openConnection();
+                InputStream inputStream = httpURLConnection.getInputStream();
+                BufferedReader bufferedReader = new BufferedReader((new InputStreamReader(inputStream)));
+                String line = "";
+                json = "";
+                while (line != null) {
+                    line = bufferedReader.readLine();
+                    json = json + line;
+                }
+                JSONObject JO = new JSONObject(json);
+                JSONObject query = JO.getJSONObject("query");
+                JSONObject pages = query.getJSONObject("pages");
+                Iterator<String> keys = pages.keys();
+                String id = keys.next();
+                idJSONObject = pages.getJSONObject(id);
+                if (!idJSONObject.isNull("thumbnail")) {
+                    JSONObject thumbnail = idJSONObject.getJSONObject("thumbnail");
+                    imageUrl = new URL(thumbnail.getString("source"));
+                    image = BitmapFactory.decodeStream(imageUrl.openConnection().getInputStream());
+                }
+
+                if (!idJSONObject.isNull("description")) {
+                    desc = idJSONObject.getString("description");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            info = new Info(image, desc);
+            return info;
+        }
+
+
 
         protected void onPreExecute() {
             articleNameList = new String[5];
@@ -111,9 +174,11 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         protected Boolean doInBackground(String... titles) {
             String articleTitle = titles[0];
             try {
-                originURL = new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&generator=search&gsrsearch=" + articleTitle + "&gsrlimit=5&prop=pageimages|description&pilimit=max&pithumbsize=600");
-                HttpURLConnection httpURLConnection = (HttpURLConnection) originURL.openConnection();
-                InputStream inputStream = httpURLConnection.getInputStream();
+                originURL = new URL("https://en.wikipedia.org/w/api.php?format=json&action=opensearch&limit=5&namespace=0&profile=engine_autoselect&search="+articleTitle);
+                HttpsURLConnection httpsURLConnection = (HttpsURLConnection) originURL.openConnection();
+//                httpsURLConnection.setRequestMethod("GET");
+//                httpsURLConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.0");
+                InputStream inputStream = httpsURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader((new InputStreamReader(inputStream)));
                 String line = "";
                 parseContent = "";
@@ -121,27 +186,13 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                     line = bufferedReader.readLine();
                     parseContent = parseContent + line;
                 }
-                JSONObject JO = new JSONObject(parseContent);
-                JSONObject query = JO.getJSONObject("query");
-                JSONObject pages = query.getJSONObject("pages");
-                Iterator<String> keys = pages.keys();
-                for (int i = 0; i < pages.length(); i++) {
-                    String id = keys.next();
-                    JSONObject idJSONObject = pages.getJSONObject(id);
-                    articleNameList[i] = idJSONObject.getString("title");
-                    if (!idJSONObject.isNull("description")) {
-                        articleDescriptionList[i] = idJSONObject.getString("description");
-                    } else {
-                        articleDescriptionList[i] = "None";
-                    }
-                    if (!idJSONObject.isNull("thumbnail")) {
-                        JSONObject thumbnail = idJSONObject.getJSONObject("thumbnail");
-                        parseImage = new URL(thumbnail.getString("source"));
-                        bmp = BitmapFactory.decodeStream(parseImage.openConnection().getInputStream());
-                    } else {
-                        bmp = BitmapFactory.decodeResource(getResources(), R.drawable.no_img);
-                    }
-                    articleImageList[i] = bmp;
+                JSONArray JO = new JSONArray(parseContent);
+                JSONArray title = JO.getJSONArray(1);
+                for (int i = 0; i < title.length(); i++) {
+                    articleNameList[i] = title.getString(i);
+                    Info info = parseInfo(articleNameList[i]);
+                    articleImageList[i] = info.getBmp();
+                    articleDescriptionList[i] = info.getDesc();
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -158,10 +209,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         protected void onPostExecute(Boolean success) {
             if (!success) {
-                Toast.makeText(getActivity(), "Error network!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "No Result", Toast.LENGTH_SHORT).show();
             } else {
                 int j = 0;
-                while (j<5) {
+                while (j < 5) {
                     ArticleRepo articleRepo = new ArticleRepo(articleNameList[j], articleDescriptionList[j], articleImageList[j]);
                     //Binds all object into an array
                     arrayList.add(articleRepo);

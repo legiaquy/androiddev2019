@@ -22,7 +22,7 @@ public class WelcomeActivity extends Activity {
                 try {
 
                     //Go to next page i.e, start the next activity.
-                    Intent intent = new Intent(WelcomeActivity.this, MainActivity.class);
+                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
                     startActivity(intent);
 
                     //Let's Finish Splash Activity since we don't want to show this when user press back button.
@@ -31,7 +31,7 @@ public class WelcomeActivity extends Activity {
                     ignored.printStackTrace();
                 }
             }
-        }, 5000);  // Give a 5 seconds delay.
+        }, 2222);
     }
 
     @Override
