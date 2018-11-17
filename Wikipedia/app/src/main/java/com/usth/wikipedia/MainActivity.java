@@ -7,6 +7,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.Window;
+import android.view.WindowManager;
+
+import com.usth.wikipedia.fragment.explore.ExploreFragment;
+import com.usth.wikipedia.fragment.HistoryFragment;
+import com.usth.wikipedia.fragment.SavedFragment;
+import com.usth.wikipedia.fragment.search.SearchFragment;
+import com.usth.wikipedia.fragment.SettingsFragment;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         BottomNavigationView navigationView = findViewById(R.id.bottom_navigation);
         navigationView.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 

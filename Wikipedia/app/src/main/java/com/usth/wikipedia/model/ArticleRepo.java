@@ -1,4 +1,4 @@
-package com.usth.wikipedia;
+package com.usth.wikipedia.model;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;

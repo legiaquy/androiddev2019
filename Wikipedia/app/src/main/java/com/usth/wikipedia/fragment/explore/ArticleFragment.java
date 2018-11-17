@@ -1,16 +1,13 @@
-package com.usth.wikipedia;
+package com.usth.wikipedia.fragment.explore;
 
 
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Paint;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.RequiresApi;
 import android.support.v4.app.Fragment;
-import android.text.Html;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +15,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.usth.wikipedia.DetailArticleActivity;
+import com.usth.wikipedia.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,18 +27,14 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.time.ZoneId;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Locale;
 
 
 /**
@@ -47,7 +43,7 @@ import java.util.Locale;
 public class ArticleFragment extends Fragment {
     private String category;
     private TextView title;
-    private TextView content, full_article;
+    private TextView content;
     private ImageView image;
     private ImageButton save;
     private String titleTemp;
@@ -56,21 +52,25 @@ public class ArticleFragment extends Fragment {
     private String today[], yesterday[];
     private String parseTitle; // Key exchange
 
+    private CardView cardView;
+
     public ArticleFragment() {
         // Required empty public constructor
     }
 
-    public static ArticleFragment newInstance(String category) {
+    public static ArticleFragment newInstance(int position, String category) {
         ArticleFragment articleFragment = new ArticleFragment();
         Bundle args = new Bundle();
         args.putString("category", category);
+        args.putInt("position", position);
         articleFragment.setArguments(args);
         return articleFragment;
     }
 
-    public static ArticleFragment newInstance(String category, String titleTemp) {
+    public static ArticleFragment newInstance(int position, String category, String titleTemp) {
         ArticleFragment articleFragment = new ArticleFragment();
         Bundle args = new Bundle();
+        args.putInt("position", position);
         args.putString("category", category);
         args.putString("titleTemp", titleTemp);
         articleFragment.setArguments(args);
@@ -90,25 +90,24 @@ public class ArticleFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_article, container, false);
+        cardView = (CardView) view.findViewById(R.id.parent);
+        cardView.setMaxCardElevation(cardView.getCardElevation() * ShadowTransformerViewPager.CardAdapter.MAX_ELEVATION_FACTOR);
+        cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(view.getContext(), DetailArticleActivity.class);
+                intent.putExtra(DetailArticleActivity.EXTRA_ARTICLETITLE, parseTitle);
+                startActivity(intent);
+            }
+        });
+
         title = view.findViewById(R.id.title);
         content = view.findViewById(R.id.content);
         image = view.findViewById(R.id.image);
-        full_article = view.findViewById(R.id.full_article);
-        full_article.setText(R.string.full_article);
 
         ShowArticleTask process = new ShowArticleTask();
         process.execute(category, titleTemp);
 
-        // Send Key to Detail Article Activity
-        full_article.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                full_article.setTextColor(getResources().getColor(R.color.colorPrimaryDark));
-                Intent intent = new Intent(view.getContext(), DetailArticleActivity.class);
-                intent.putExtra(DetailArticleActivity.EXTRA_ARTICLETITLE, parseTitle );
-                startActivity(intent);
-            }
-        });
         return view;
     }
 
@@ -248,6 +247,10 @@ public class ArticleFragment extends Fragment {
                 titleTemp = parseTitle;
             }
         }
+    }
+
+    public CardView getCardView() {
+        return cardView;
     }
 
 
