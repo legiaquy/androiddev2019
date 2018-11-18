@@ -148,12 +148,6 @@
                 android:layout_marginBottom="16dp"/>
         </RelativeLayout>
 
-        <com.usth.wikipedia.widget.TouchyWebView
-            android:id="@+id/very_detail_content"
-            android:layout_below="@id/article_properties"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="14dp" />
 
         <EditText
             android:id="@+id/detail_content_article"

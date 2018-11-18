@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
+import android.text.InputType;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
@@ -113,11 +114,13 @@ public class ExploreFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
+                s = s.toLowerCase();
                 searchAdapter.filter(s);
                 new SearchArticleTask().execute(s);
                 return false;
             }
         });
+
         searchAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

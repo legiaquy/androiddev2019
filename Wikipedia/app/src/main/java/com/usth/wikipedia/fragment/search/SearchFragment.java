@@ -43,7 +43,8 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     private String[] articleNameList;
     private Bitmap[] articleImageList;
     private String[] articleDescriptionList;
-    private ArrayList<ArticleRepo> arrayList = new ArrayList<>(5);
+    private ArrayList<ArticleRepo> arrayList = new ArrayList<>(10);
+    private int more, length; // to load more item in list view
 
     public SearchFragment() {
         // Required empty public constructor
@@ -80,8 +81,10 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     @Override
     public boolean onQueryTextSubmit(String query) {
         adapter.filter(); // Clear
+        length = 10;
+        more = 0;
         SearchArticleTask process = new SearchArticleTask(); // Search article in background
-        process.execute(query);
+        process.execute(query, String.valueOf(more), String.valueOf(length));
         searchView.clearFocus();
         return true;
     }
@@ -123,7 +126,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             Bitmap image = BitmapFactory.decodeResource(getResources(), R.drawable.no_img);
             JSONObject idJSONObject;
             try {
-                originURL = new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=pageimages|description&exintro&explaintext&redirects=1&piprop=thumbnail&pithumbsize=200&titles="+title);
+                originURL = new URL("https://en.wikipedia.org/w/api.php?format=json&action=query&prop=pageimages|description&redirects=1&piprop=thumbnail&pithumbsize=100&titles="+title);
                 HttpURLConnection httpURLConnection =(HttpURLConnection) originURL.openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
                 BufferedReader bufferedReader = new BufferedReader((new InputStreamReader(inputStream)));
@@ -161,13 +164,18 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
 
         protected void onPreExecute() {
-            articleNameList = new String[5];
-            articleDescriptionList = new String[5];
-            articleImageList = new Bitmap[5];
+            articleNameList = new String[10];
+            articleDescriptionList = new String[10];
+            articleImageList = new Bitmap[10];
         }
 
-        protected Boolean doInBackground(String... titles) {
-            String articleTitle = titles[0];
+        protected Boolean doInBackground(String... articles) {
+            String articleTitle = articles[0];
+            String articleMore = articles[1];
+            String articleLength = articles[2];
+
+            int loadLength = Integer.parseInt(articleLength);
+            int loadMore = Integer.parseInt(articleMore);
             try {
                 originURL = new URL("https://en.wikipedia.org/w/api.php?format=json&action=opensearch&limit=5&namespace=0&profile=engine_autoselect&search="+articleTitle);
                 HttpsURLConnection httpsURLConnection = (HttpsURLConnection) originURL.openConnection();
@@ -183,7 +191,11 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                 }
                 JSONArray JO = new JSONArray(parseContent);
                 JSONArray title = JO.getJSONArray(1);
-                for (int i = 0; i < title.length(); i++) {
+                if (loadLength > title.length()) {
+                    loadLength = title.length();
+                }
+
+                for (int i = loadMore; i < loadLength; i++) {
                     articleNameList[i] = title.getString(i);
                     Info info = parseInfo(articleNameList[i]);
                     articleImageList[i] = info.getBmp();
