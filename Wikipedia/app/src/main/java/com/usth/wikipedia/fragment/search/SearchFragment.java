@@ -1,22 +1,19 @@
-package com.usth.wikipedia;
+package com.usth.wikipedia.fragment.search;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListView;
 import android.support.v7.widget.SearchView;
-import android.widget.TextView;
 import android.widget.Toast;
+
+import com.usth.wikipedia.R;
+import com.usth.wikipedia.model.ArticleRepo;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,8 +28,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Locale;
 
 import javax.net.ssl.HttpsURLConnection;
 

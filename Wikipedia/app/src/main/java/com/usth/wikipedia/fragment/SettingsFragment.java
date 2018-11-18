@@ -1,4 +1,4 @@
-package com.usth.wikipedia;
+package com.usth.wikipedia.fragment;
 
 
 import android.content.Intent;
@@ -8,6 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import com.usth.wikipedia.LoginActivity;
+import com.usth.wikipedia.R;
 
 
 /**

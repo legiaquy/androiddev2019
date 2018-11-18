@@ -1,6 +1,5 @@
-package com.usth.wikipedia;
+package com.usth.wikipedia.fragment.search;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -11,8 +10,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.usth.wikipedia.model.ArticleRepo;
+import com.usth.wikipedia.DetailArticleActivity;
+import com.usth.wikipedia.R;
+
 import java.util.ArrayList;
-import java.util.Locale;
 
 public class ListViewAdapter extends BaseAdapter {
     Context mContext;
