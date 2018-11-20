@@ -48,7 +48,7 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class ArticleFragment extends Fragment {
-    public final String SHARED_PREFERENCES_NAME_SAVE = "save_file";
+    public final String SHARED_PREFERENCES_NAME_SAVE = "save";
     public final String SHARED_PREFERENCES_NAME_HISTORY = "history";
 
     private String category;
