@@ -111,7 +111,11 @@ public class SavedFragment extends Fragment {
                 JSONObject idJSONObject = pages.getJSONObject(id);
 
                 // Parse content
-                parseDescription = idJSONObject.getString("description");
+                if (!idJSONObject.isNull("description")) {
+                    parseDescription = idJSONObject.getString("description");
+                } else {
+                    parseDescription = "";
+                }
                 parseTitle = idJSONObject.getString("title");
 
                 if(!idJSONObject.isNull("thumbnail")) {

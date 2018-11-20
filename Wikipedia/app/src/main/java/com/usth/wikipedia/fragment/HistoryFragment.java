@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -40,6 +41,7 @@ import java.util.Map;
 public class HistoryFragment extends Fragment {
     private ListViewAdapter adapter;
     private ListView list;
+    private ImageButton reresh;
     //    private String[] articleNameList;
 //    private Bitmap[] articleImageList;
 //    private String[] articleDescriptionList;
@@ -52,6 +54,14 @@ public class HistoryFragment extends Fragment {
         // Inflate the layout for this fragment
 
         final View view = inflater.inflate(R.layout.fragment_history, container, false);
+//        reresh = view.findViewById(R.id.refresh_button);
+//        reresh.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getActivity().recreate();
+//            }
+//        });
+
         list = view.findViewById(R.id.list_article);
         final ArticleRepo example = new ArticleRepo("Example", "Ex", BitmapFactory.decodeResource(getResources(), R.drawable.no_img));
         arrayList.add(example); // Add a temporary item in arrayList to prevent null array
@@ -60,7 +70,12 @@ public class HistoryFragment extends Fragment {
         adapter.filter();
         list.setAdapter(adapter);
 
+<<<<<<< HEAD
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("history", Context.MODE_PRIVATE);
+=======
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+
+>>>>>>> Update
         Map<String, ?> allEntries = sharedPreferences.getAll();
         for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
             new FindArticleTask().execute(entry.getKey());
@@ -97,7 +112,11 @@ public class HistoryFragment extends Fragment {
                 JSONObject idJSONObject = pages.getJSONObject(id);
 
                 // Parse content
-                parseDescription = idJSONObject.getString("description");
+                if (!idJSONObject.isNull("description")) {
+                    parseDescription = idJSONObject.getString("description");
+                } else {
+                    parseDescription = "";
+                }
                 parseTitle = idJSONObject.getString("title");
 
                 if(!idJSONObject.isNull("thumbnail")) {
@@ -132,4 +151,15 @@ public class HistoryFragment extends Fragment {
         }
     }
 
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+
+        Map<String, ?> allEntries = sharedPreferences.getAll();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            new FindArticleTask().execute(entry.getKey());
+        }
+    }
 }

@@ -52,5 +52,5 @@
         android:layout_marginTop="-1dp"
         android:layout_marginEnd="2dp"
         android:layout_gravity="top|end"
-        android:background="@drawable/ic_save" />
+        android:src="@drawable/ic_saved_black_24dp"/>
 </android.support.v7.widget.CardView>

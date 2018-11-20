@@ -15,6 +15,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -105,12 +106,23 @@ public class ArticleFragment extends Fragment {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+<<<<<<< HEAD
 //                String SHARED_PREFERENCES_NAME = "history"
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME_HISTORY, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 String articlesTitle = sharedPreferences.getString(titleTemp,"");
                 if(articlesTitle == "")
                     editor.putString(titleTemp, titleTemp);
+=======
+//                String SHARED_PREFERENCES_NAME = "history";
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME_HISTORY, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String articlesTitle = sharedPreferences.getString(titleTemp,"");
+                if(articlesTitle == "") {
+                    editor.putString(titleTemp, titleTemp);
+                    editor.apply();
+                }
+>>>>>>> Update
 
                 Log.d("ok", titleTemp);
 
@@ -128,8 +140,8 @@ public class ArticleFragment extends Fragment {
         process.execute(category, titleTemp);
 
         // Handle if user click Save article
-        ImageButton imageButton = view.findViewById(R.id.star_button);
-        imageButton.setOnClickListener(new View.OnClickListener() {
+        save = view.findViewById(R.id.star_button);
+        save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String message = "ERROR saving article!";
@@ -153,6 +165,7 @@ public class ArticleFragment extends Fragment {
                      * X: data's type
                      */
                     editor.putString(titleTemp, titleTemp);
+                    save.setBackgroundResource(R.drawable.ic_save);
 
                     if(editor.commit()){
                         message = "Saved!";
@@ -162,6 +175,7 @@ public class ArticleFragment extends Fragment {
                     if(editor.remove(titleTemp).commit()) {
                         message = "Unsaved!";
                     }
+                    save.setBackgroundResource(R.drawable.ic_saved_black_24dp);
                 }
 
                 Toast toast = Toast.makeText(getActivity(),
