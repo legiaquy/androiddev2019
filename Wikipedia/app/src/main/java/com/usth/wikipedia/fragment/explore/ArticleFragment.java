@@ -48,6 +48,9 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class ArticleFragment extends Fragment {
+    public final String SHARED_PREFERENCES_NAME_SAVE = "save_file";
+    public final String SHARED_PREFERENCES_NAME_HISTORY = "history";
+
     private String category;
     private TextView title;
     private TextView content;
@@ -102,14 +105,14 @@ public class ArticleFragment extends Fragment {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String SHARED_PREFERENCES_NAME = "history";
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+//                String SHARED_PREFERENCES_NAME = "history";
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME_HISTORY, Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 String articlesTitle = sharedPreferences.getString(titleTemp,"");
                 if(articlesTitle == "")
                     editor.putString(titleTemp, titleTemp);
 
-                Log.d("sadadadada", titleTemp);
+                Log.d("ok", titleTemp);
 
                 Intent intent = new Intent(view.getContext(), DetailArticleActivity.class);
                 intent.putExtra(DetailArticleActivity.EXTRA_ARTICLETITLE, parseTitle);
@@ -130,14 +133,14 @@ public class ArticleFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String message = "ERROR saving article!";
-                String SHARED_PREFERENCES_NAME = "save_file";
+//                String SHARED_PREFERENCES_NAME = "save_file";
 
                 /**
                  * Create object type SharedPreferences
                  * SHARED_PREFERENCES_NAME: name of file Shared Preferences
                  * MODE_PRIVATE: this mean only this application can access the file
                  */
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME_SAVE, Context.MODE_PRIVATE);
                 // Open the file
                 SharedPreferences.Editor editor = sharedPreferences.edit();
 
