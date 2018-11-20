@@ -70,12 +70,8 @@ public class HistoryFragment extends Fragment {
         adapter.filter();
         list.setAdapter(adapter);
 
-<<<<<<< HEAD
         SharedPreferences sharedPreferences = getContext().getSharedPreferences("history", Context.MODE_PRIVATE);
-=======
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
 
->>>>>>> Update
         Map<String, ?> allEntries = sharedPreferences.getAll();
         for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
             new FindArticleTask().execute(entry.getKey());
@@ -155,11 +151,11 @@ public class HistoryFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("history", Context.MODE_PRIVATE);
 
         Map<String, ?> allEntries = sharedPreferences.getAll();
-        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
-            new FindArticleTask().execute(entry.getKey());
-        }
+        Object entry = allEntries.keySet().toArray()[allEntries.keySet().size()-1];
+        new FindArticleTask().execute(entry.toString());
+
     }
 }
