@@ -47,10 +47,12 @@ public class LoginActivity extends Activity {
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
+                        Log.d("response",response);
                         try {
                             JSONObject objUser = new JSONObject(response);
-                            String status = objUser.optJSONObject("clientlogin").optString("status");
-                            Log.d("status",status);
+                            JSONObject a = objUser.optJSONObject("clientlogin");
+                            String status = "Dsad";
+                            Log.d("status",a.toString());
 
                             if(status == "PASS") {
                                 Intent i = new Intent(LoginActivity.this,MainActivity.class);
@@ -113,9 +115,10 @@ public class LoginActivity extends Activity {
                         JSONObject obj = new JSONObject(response);
                         String token = obj.optJSONObject("query").optJSONObject("tokens").
                                 optString("logintoken");
+                        Log.d("token",token);
 
                         sendRequestLogin(loginURL, token, username, pass);
-                        Log.d("token",token);
+
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

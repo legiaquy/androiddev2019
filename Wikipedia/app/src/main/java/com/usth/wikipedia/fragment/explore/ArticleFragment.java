@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,8 +20,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.toolbox.StringRequest;
-import com.usth.wikipedia.CreateNewAccountActivity;
+
 import com.usth.wikipedia.DetailArticleActivity;
 import com.usth.wikipedia.R;
 
@@ -100,6 +100,15 @@ public class ArticleFragment extends Fragment {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String SHARED_PREFERENCES_NAME = "history";
+                SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                String articlesTitle = sharedPreferences.getString(titleTemp,"");
+                if(articlesTitle == "")
+                    editor.putString(titleTemp, titleTemp);
+
+                Log.d("sadadadada", titleTemp);
+
                 Intent intent = new Intent(view.getContext(), DetailArticleActivity.class);
                 intent.putExtra(DetailArticleActivity.EXTRA_ARTICLETITLE, parseTitle);
                 startActivity(intent);
@@ -129,32 +138,33 @@ public class ArticleFragment extends Fragment {
                 SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
                 // Open the file
                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                /**
-                 * Input data
-                 * editor.putX(String key,value)
-                 * X: data's type
-                 */
-                editor.putInt("idArticle",1); // Ở chỗ này ông nên lưu key dưới dạng
-                // index và trước khi lưu thì phải đọc file ra trước để lấy chỉ số index hiện tại
-                // để input vào tiếp và check người dùng đã save article đấy chưa. Ezzz GG!!!
 
-                if(editor.commit()){
-                    message = "Saved!";
+                String articlesTitle = sharedPreferences.getString(titleTemp,"");
+
+                if(articlesTitle == "") {
+                    /**
+                     * Input data
+                     * editor.putX(String key,value)
+                     * X: data's type
+                     */
+                    editor.putString(titleTemp, titleTemp);
+
+                    if(editor.commit()){
+                        message = "Saved!";
+                    }
+                } else {
+                    message = "ERROR unsaving article!";
+                    if(editor.remove(titleTemp).commit()) {
+                        message = "Unsaved!";
+                    }
                 }
 
                 Toast toast = Toast.makeText(getActivity(),
                         message, Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
                 toast.show();
-
-                // Read from file
-                int idArticles = sharedPreferences.getInt("idArticle",0);
-
-
             }
         });
-
-
 
         return view;
     }
