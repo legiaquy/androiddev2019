@@ -60,16 +60,32 @@
                         android:orientation="vertical"
                         android:padding="4dp">
 
-                        <TextView
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@color/listItem2"
-                            android:gravity="start"
-                            android:padding="5dp"
-                            android:text="@string/today_page"
-                            android:fontFamily="serif"
-                            android:textColor="@android:color/black"
-                            android:textSize="20sp"/>
+                            android:padding="1dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:background="@color/listItem2"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:padding="5dp"
+                                android:text="@string/today_page"
+                                android:fontFamily="serif"
+                                android:textColor="@android:color/black"
+                                android:textSize="20sp"/>
+
+                            <Button
+                                android:id="@+id/today_list"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:text="@string/list_all"
+                                android:textColor="@color/colorPrimary"/>
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -91,18 +107,33 @@
                                 android:paddingEnd="20dp" />
 
                         </LinearLayout>
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:padding="1dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:background="@color/listItem2"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:padding="5dp"
+                                android:text="@string/yesterday_page"
+                                android:fontFamily="serif"
+                                android:textColor="@android:color/black"
+                                android:textSize="20sp"/>
 
-                        <TextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/listItem2"
-                            android:gravity="start"
-                            android:padding="5dp"
-                            android:text="@string/yesterday_page"
-                            android:fontFamily="serif"
-                            android:textColor="@android:color/black"
-                            android:textSize="20sp"/>
+                            <Button
+                                android:id="@+id/yesterday_list"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:text="@string/list_all"
+                                android:textColor="@color/colorPrimary"/>
+                        </RelativeLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -125,17 +156,34 @@
 
                         </LinearLayout>
 
-                        <TextView
+                        <RelativeLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:background="@color/listItem2"
-                            android:gravity="start"
-                            android:padding="5dp"
-                            android:text="@string/random_page"
-                            android:fontFamily="serif"
-                            android:textColor="@android:color/black"
-                            android:textSize="20sp"/>
+                            android:padding="1dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:background="@color/listItem2"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:padding="5dp"
+                                android:text="@string/random_page"
+                                android:fontFamily="serif"
+                                android:textColor="@android:color/black"
+                                android:textSize="20sp"/>
+
+                            <Button
+                                android:id="@+id/random_list"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:background="?android:attr/selectableItemBackground"
+                                android:text="@string/list_all"
+                                android:textColor="@color/colorPrimary"/>
+                        </RelativeLayout>
+
 
                         <LinearLayout
                             android:layout_width="match_parent"

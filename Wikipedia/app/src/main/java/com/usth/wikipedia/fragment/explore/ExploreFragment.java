@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v7.widget.ActionMenuView;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.SearchView;
 import android.text.InputType;
@@ -24,10 +25,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.usth.wikipedia.DetailArticleActivity;
+import com.usth.wikipedia.FeatureListActivity;
 import com.usth.wikipedia.R;
 import com.usth.wikipedia.model.ArticleRepo;
 
@@ -41,8 +45,10 @@ import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -51,6 +57,7 @@ public class ExploreFragment extends Fragment {
 
     private WrapContentViewPager viewPager1, viewPager2, viewPager3;
     private ArticlePagerAdapter adapter1, adapter2, adapter3;
+    private Button todayButton, yesterdayButton, randomButton;
     private String[] articleNameList;
     private ArrayList<ArticleRepo> arrayList = new ArrayList<>(5);
     private SearchView searchView;
@@ -72,6 +79,13 @@ public class ExploreFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         final View layout = inflater.inflate(R.layout.fragment_explore, container, false);
+
+        // Button
+        todayButton = layout.findViewById(R.id.today_list);
+        yesterdayButton = layout.findViewById(R.id.yesterday_list);
+        randomButton = layout.findViewById(R.id.random_list);
+
+        // Viewpager
         viewPager3 = layout.findViewById(R.id.viewpager3);
         viewPager2 = layout.findViewById(R.id.viewpager2);
         viewPager1 = layout.findViewById(R.id.viewpager1);
@@ -89,13 +103,15 @@ public class ExploreFragment extends Fragment {
         ShadowTransformerViewPager fragmentArticleShadowTransformerViewPager3 = new ShadowTransformerViewPager(viewPager3, adapter3);
         fragmentArticleShadowTransformerViewPager3.enableScaling(true);
 
+        // SearchView
         searchView = layout.findViewById(R.id.auto_complete_search);
         searchAutoComplete = (SearchView.SearchAutoComplete) searchView.findViewById(android.support.v7.appcompat.R.id.search_src_text);
         searchAutoComplete.setDropDownBackgroundResource(R.drawable.article_list_backgroundcolor);
         searchAutoComplete.setThreshold(1);
         searchAutoComplete.setDropDownAnchor(R.id.auto_complete_search);
+        searchAutoComplete.setDropDownWidth(200);
 
-
+        // Setup
         ArticleRepo temp = new ArticleRepo("");
         arrayList.add(temp); // Prevent null array
 
@@ -140,12 +156,39 @@ public class ExploreFragment extends Fragment {
         viewPager2.setOffscreenPageLimit(2);
         viewPager2.setAdapter(adapter2);
 
+        todayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), FeatureListActivity.class);
+                intent.putExtra(FeatureListActivity.EXTRA_FEATURE, "today");
+                startActivity(intent);
+            }
+        });
+
+        yesterdayButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), FeatureListActivity.class);
+                intent.putExtra(FeatureListActivity.EXTRA_FEATURE, "yesterday");
+                startActivity(intent);
+            }
+        });
+
+        randomButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), FeatureListActivity.class);
+                intent.putExtra(FeatureListActivity.EXTRA_FEATURE, "random");
+                startActivity(intent);
+            }
+        });
+
         return layout;
     }
 
 
     // ViewPager's adapter
-    public static class ArticlePagerAdapter extends FragmentStatePagerAdapter implements ShadowTransformerViewPager.CardAdapter {
+     class ArticlePagerAdapter extends FragmentStatePagerAdapter implements ShadowTransformerViewPager.CardAdapter {
         //        private static int NUM_ITEMS = 3;
         private float baseElevation;
         private String category;
@@ -157,7 +200,7 @@ public class ExploreFragment extends Fragment {
             this.baseElevation = baseElevation;
             this.category = category;
 
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 11; i++) {
                 addArticleFragment(new ArticleFragment());
             }
         }
@@ -178,7 +221,7 @@ public class ExploreFragment extends Fragment {
         }
 
         @Override
-        public Fragment getItem(int position) {
+        public Fragment getItem(final int position) {
             switch (category) {
                 case "random":
                     switch (position) {
@@ -188,28 +231,115 @@ public class ExploreFragment extends Fragment {
                             return ArticleFragment.newInstance(1, category);
                         case 2:
                             return ArticleFragment.newInstance(2, category);
+                        case 3:
+                            return ArticleFragment.newInstance(3, category);
+                        case 4:
+                            return ArticleFragment.newInstance(4, category);
+                        case 5:
+                            return ArticleFragment.newInstance(5, category);
+                        case 6:
+                            return ArticleFragment.newInstance(6, category);
+                        case 7:
+                            return ArticleFragment.newInstance(7, category);
+                        case 8:
+                            return ArticleFragment.newInstance(8, category);
+                        case 9:
+                            return ArticleFragment.newInstance(9, category);
+                        case 10:
+                            return ArticleFragment.newInstance(10, category);
                         default:
                             return null;
                     }
                 case "today":
                     switch (position) {
                         case 0:
-                            return ArticleFragment.newInstance(0, category, "article1");
+                            return ArticleFragment.newInstance(0, category, "0");
                         case 1:
-                            return ArticleFragment.newInstance(1, category, "article2");
+                            return ArticleFragment.newInstance(1, category,"1");
                         case 2:
-                            return ArticleFragment.newInstance(2, category, "article3");
+                            return ArticleFragment.newInstance(2, category, "2");
+                        case 3:
+                            return ArticleFragment.newInstance(3, category,"3");
+                        case 4:
+                            return ArticleFragment.newInstance(4, category,"4");
+                        case 5:
+                            return ArticleFragment.newInstance(5, category,"5");
+                        case 6:
+                            return ArticleFragment.newInstance(6, category,"6");
+                        case 7:
+                            return ArticleFragment.newInstance(7, category,"7");
+                        case 8:
+                            return ArticleFragment.newInstance(8, category,"8");
+                        case 9:
+                            return ArticleFragment.newInstance(9, category,"9");
+                        case 10:
+                            return ArticleFragment.newInstance(10, category,"10");
+
+//                        case 12:
+//                            return ArticleFragment.newInstance(12, category,"12");
+//                        case 13:
+//                            return ArticleFragment.newInstance(13, category,"13");
+//                        case 14:
+//                            return ArticleFragment.newInstance(14, category,"14");
+//                        case 15:
+//                            return ArticleFragment.newInstance(15, category,"15");
+//                        case 16:
+//                            return ArticleFragment.newInstance(16, category,"16");
+//                        case 17:
+//                            return ArticleFragment.newInstance(17, category,"17");
+//                        case 18:
+//                            return ArticleFragment.newInstance(18, category,"18");
+//                        case 19:
+//                            return ArticleFragment.newInstance(19, category,"19");
+//                        case 20:
+//                            return ArticleFragment.newInstance(20, category,"20");
                         default:
                             return null;
                     }
                 case "yesterday":
                     switch (position) {
                         case 0:
-                            return ArticleFragment.newInstance(0, category, "article1");
+                            return ArticleFragment.newInstance(0, category, "0");
                         case 1:
-                            return ArticleFragment.newInstance(1, category, "article2");
+                            return ArticleFragment.newInstance(1, category,"1");
                         case 2:
-                            return ArticleFragment.newInstance(2, category, "article3");
+                            return ArticleFragment.newInstance(2, category, "2");
+                        case 3:
+                            return ArticleFragment.newInstance(3, category,"3");
+                        case 4:
+                            return ArticleFragment.newInstance(4, category,"4");
+                        case 5:
+                            return ArticleFragment.newInstance(5, category,"5");
+                        case 6:
+                            return ArticleFragment.newInstance(6, category,"6");
+                        case 7:
+                            return ArticleFragment.newInstance(7, category,"7");
+                        case 8:
+                            return ArticleFragment.newInstance(8, category,"8");
+                        case 9:
+                            return ArticleFragment.newInstance(9, category,"9");
+                        case 10:
+                            return ArticleFragment.newInstance(10, category,"10");
+                        case 11:
+                            return ArticleFragment.newInstance(11, category,"11");
+//                        case 12:
+//                            return ArticleFragment.newInstance(12, category,"12");
+//                        case 13:
+//                            return ArticleFragment.newInstance(13, category,"13");
+//                        case 14:
+//                            return ArticleFragment.newInstance(14, category,"14");
+//                        case 15:
+//                            return ArticleFragment.newInstance(15, category,"15");
+//                        case 16:
+//                            return ArticleFragment.newInstance(16, category,"16");
+//                        case 17:
+//                            return ArticleFragment.newInstance(17, category,"17");
+//                        case 18:
+//                            return ArticleFragment.newInstance(18, category,"18");
+//                        case 19:
+//                            return ArticleFragment.newInstance(19, category,"19");
+//                        case 20:
+//                            return ArticleFragment.newInstance(20, category,"20");
                         default:
                             return null;
                     }
@@ -238,6 +368,7 @@ public class ExploreFragment extends Fragment {
         public CharSequence getPageTitle(int position) {
             return "Article" + position;
         }
+
     }
 
     @Override
@@ -378,6 +509,8 @@ public class ExploreFragment extends Fragment {
     public static float dpToPixels(int dp, Context context) {
         return dp * (context.getResources().getDisplayMetrics().density);
     }
+
+
 }
 
 

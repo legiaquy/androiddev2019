@@ -30,7 +30,6 @@
                 android:id="@+id/detail_title_article"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test"
                 android:gravity="start"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textStyle="bold"
@@ -41,7 +40,6 @@
             <TextView
                 android:id="@+id/detail_description_article"
                 android:layout_width="match_parent"
-                android:text="Test"
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:textAppearance="?android:attr/textAppearanceSmall"

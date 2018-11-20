@@ -182,7 +182,12 @@ public class DetailArticleActivity extends AppCompatActivity implements View.OnC
 
                 detail_alias_article.setText(parseAlias);
 
-                detail_content_article.setText(parseContent);
+                String s = parseContent.replace("\ufffd\ufffd2\ufffd\ufffd", "")
+                                        .replace("\ufffd\ufffd3\ufffd\ufffd", "")
+                                        .replace("\ufffd\ufffd4\ufffd\ufffd", "");
+
+
+                detail_content_article.setText(s);
 
                 detail_image_article.setImageBitmap(bmp);
 
@@ -192,28 +197,81 @@ public class DetailArticleActivity extends AppCompatActivity implements View.OnC
         }
     }
 
+//    ArrayList = [
+//        {
+//                Introduction
+//        }
+//
+//        {
+//            Main 1: [
+//                        {
+//                            Sub 1
+//                        }
+//
+//                        {
+//                            Sub 1
+//                        }
+//                    ]
+//        }
+//
+//        {
+//            Main 2: [
+//                        {
+//                            Sub 1
+//                        }
+//
+//                        {
+//                            Sub 1
+//                        }
+//                    ]
+//        }
+//    ]
 
-    // Update the database after editing
-//    private class UpdateContentTask extends AsyncTask<String, Void, Boolean> {
+//    private ArrayList<String> convertContent (String a) {
+//        String main_content;
+//        String ref;
+//        String exlink;
 //
-//
-//        protected void onPreExecute() {
-//
-//        }
-//
-//        protected Boolean doInBackground(String... articles) {
-//            String articleTitle = articles[0];
-//            try {
-//
-//            }
-//        }
-//
-//        protected void onPostExecute(Boolean success) {
-//            if (!success) {
-//
-//            }
+//        ArrayList<ArrayList<ArrayList<String>>> object = someMagic(a);
+//        for (int i = 0; i < object.size(); i++) {
+//            ArrayList<ArrayList<String>> partMain = object.get(i);
 //        }
 //    }
+
+//    private ArrayList<ArrayList<ArrayList<String>>> someMagic(String s){
+//        ArrayList<ArrayList<ArrayList<String>>> myArrayList = new ArrayList<>();
+//        ArrayList<ArrayList<String>> partMain = new ArrayList<>();
+//        ArrayList<String> partSub1 = new ArrayList<>();
+//        final ArrayList<ArrayList<String>> tempMain = new ArrayList<>();
+//        final ArrayList<String> tempSub1 = new ArrayList<>();
+//        String partSub2 = "";
+//        String[] m, s1, s2;
+//        m = s.split("\ufffd\ufffd2\ufffd\ufffd");
+//        for (int i = 0 ; i < m.length; i++) {
+//            s1 = m[i].split("\ufffd\ufffd3\ufffd\ufffd");
+//            if (s1.length > 0) {
+//                for (int j = 0; j < s1.length; j++) {
+//                    s2 = s1[j].split("\ufffd\ufffd4\ufffd\ufffd");
+//                    if (s2.length > 0) {
+//                        for (int k = 0; k < s2.length; k++)
+//                            partSub2 = s2[k];
+//                            partSub1.add(partSub2);
+//                    } else {
+//                        partSub1.add("");
+//                    }
+//                    partMain.add(partSub1);
+//                    partSub1 = new ArrayList<>();
+//                }
+//            } else {
+//                tempSub1.add("");
+//                tempMain.add(tempSub1);
+//                myArrayList.add(tempMain);
+//            }
+//            myArrayList.add(partMain);
+//        }
+//        return myArrayList;
+//    }
+
 
     protected void onRestart() {
         super.onRestart();

@@ -39,7 +39,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -173,7 +175,8 @@ public class ArticleFragment extends Fragment {
         private String parseContent;
         private URL parseImage, originURL;
         private Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.no_img);
-        private String title1, title2, title3;
+        private String[] titleArticle = new String[50];
+        private JSONObject[] Article = new JSONObject[50];
 
         protected void FindTitle() {
             try {
@@ -181,13 +184,17 @@ public class ArticleFragment extends Fragment {
                 JSONArray items = JO.getJSONArray("items");
                 JSONObject articlesObject = items.getJSONObject(0);
                 JSONArray articlesArray = articlesObject.getJSONArray("articles");
-                JSONObject Article1 = articlesArray.getJSONObject(984);
-                JSONObject Article2 = articlesArray.getJSONObject(985);
-                JSONObject Article3 = articlesArray.getJSONObject(986);
+//                JSONObject Article1 = articlesArray.getJSONObject(984);
+////                JSONObject Article2 = articlesArray.getJSONObject(985);
+////                JSONObject Article3 = articlesArray.getJSONObject(986);
+                for (int i=0; i<11; i++) {
+                    Article[i] = articlesArray.getJSONObject(988-i);
+                    titleArticle[i] = Article[i].getString("article");
+                }
 
-                title1 = Article1.getString("article");
-                title2 = Article2.getString("article");
-                title3 = Article3.getString("article");
+//                title1 = Article1.getString("article");
+//                title2 = Article2.getString("article");
+//                title3 = Article3.getString("article");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -217,14 +224,15 @@ public class ArticleFragment extends Fragment {
 
         protected void onPreExecute(){
             dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            today = dateFormat.format(getDate(-2)).split("/");
-            yesterday = dateFormat.format(getDate(-3)).split("/");
+            today = dateFormat.format(getDate(-1)).split("/");
+            yesterday = dateFormat.format(getDate(-2)).split("/");
         }
 
         protected Boolean doInBackground(String... articles) {
             String articleCategory = articles[0];
             String articleTitle = articles[1];
-            String url = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages|description|pageterms|categories&exintro&explaintext&redirects=1&piprop=thumbnail&pithumbsize=600&titles=";
+
+            final String url = "https://en.wikipedia.org/w/api.php?format=json&action=query&prop=extracts|pageimages|description|pageterms|categories&exintro&explaintext&redirects=1&piprop=thumbnail&pithumbsize=600&titles=";
             try {
                 switch (articleCategory) {
                     case "random":
@@ -234,25 +242,59 @@ public class ArticleFragment extends Fragment {
                         originURL = new URL("https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/" + today[0] + "/" + today[1] + "/" + today[2]);
                         ParseContent(originURL); // parse json content from origin url
                         FindTitle(); // find article's title in json content
-                        if (articleTitle.equals("article1")) {
-                            originURL = new URL(url + title1);
-                        } else if (articleTitle.equals("article2")) {
-                            originURL = new URL(url + title2);
-                        } else if (articleTitle.equals("article3")) {
-                            originURL = new URL(url + title3);
+                        if (articleTitle.equals("0")) {
+                            originURL = new URL (url + titleArticle[0]);
+                        } else if (articleTitle.equals("1")) {
+                            originURL = new URL(url + titleArticle[1]);
+                        } else if (articleTitle.equals("2")) {
+                            originURL = new URL(url + titleArticle[2]);
+                        } else if (articleTitle.equals("3")) {
+                            originURL = new URL(url + titleArticle[3]);
+                        } else if (articleTitle.equals("4")) {
+                            originURL = new URL(url + titleArticle[4]);
+                        } else if (articleTitle.equals("5")) {
+                            originURL = new URL(url + titleArticle[5]);
+                        } else if (articleTitle.equals("6")) {
+                            originURL = new URL(url + titleArticle[6]);
+                        } else if (articleTitle.equals("7")) {
+                            originURL = new URL(url + titleArticle[7]);
+                        } else if (articleTitle.equals("8")) {
+                            originURL = new URL(url + titleArticle[8]);
+                        } else if (articleTitle.equals("9")) {
+                            originURL = new URL(url + titleArticle[9]);
+                        } else if (articleTitle.equals("10")) {
+                            originURL = new URL(url + titleArticle[10]);
                         }
                         break;
                     case "yesterday":
                         originURL = new URL("https://wikimedia.org/api/rest_v1/metrics/pageviews/top/en.wikipedia/all-access/" + yesterday[0] + "/" + yesterday[1] + "/" + yesterday[2]);
                         ParseContent(originURL); // parse json content from origin url
                         FindTitle(); // find article's title in json content
-                        if (articleTitle.equals("article1")) {
-                            originURL = new URL(url + title1);
-                        } else if (articleTitle.equals("article2")) {
-                            originURL = new URL(url + title2);
-                        } else if (articleTitle.equals("article3")) {
-                            originURL = new URL(url + title3);
+                        if (articleTitle.equals("0")) {
+                            originURL = new URL(url + titleArticle[0]);
+                        }else if (articleTitle.equals("1")) {
+                            originURL = new URL(url + titleArticle[1]);
+                        } else if (articleTitle.equals("2")) {
+                            originURL = new URL(url + titleArticle[2]);
+                        } else if (articleTitle.equals("3")) {
+                            originURL = new URL(url + titleArticle[3]);
+                        } else if (articleTitle.equals("4")) {
+                            originURL = new URL(url + titleArticle[4]);
+                        } else if (articleTitle.equals("5")) {
+                            originURL = new URL(url + titleArticle[5]);
+                        } else if (articleTitle.equals("6")) {
+                            originURL = new URL(url + titleArticle[6]);
+                        } else if (articleTitle.equals("7")) {
+                            originURL = new URL(url + titleArticle[7]);
+                        } else if (articleTitle.equals("8")) {
+                            originURL = new URL(url + titleArticle[8]);
+                        } else if (articleTitle.equals("9")) {
+                            originURL = new URL(url + titleArticle[9]);
+                        } else if (articleTitle.equals("10")) {
+                            originURL = new URL(url + titleArticle[10]);
                         }
+                        break;
+
                 }
                 ParseContent(originURL);
                 JSONObject JO = new JSONObject(parseContent);
@@ -310,6 +352,5 @@ public class ArticleFragment extends Fragment {
     public CardView getCardView() {
         return cardView;
     }
-
 
 }

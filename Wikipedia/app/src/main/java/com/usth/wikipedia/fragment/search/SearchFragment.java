@@ -4,12 +4,16 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.support.v7.widget.SearchView;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.usth.wikipedia.R;
@@ -40,11 +44,16 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
     private ListView list;
     private ListViewAdapter adapter;
     private SearchView searchView;
+    private Button moreButton;
     private String[] articleNameList;
     private Bitmap[] articleImageList;
     private String[] articleDescriptionList;
-    private ArrayList<ArticleRepo> arrayList = new ArrayList<>(10);
-    private int more, length; // to load more item in list view
+    private ArrayList<ArticleRepo> arrayList = new ArrayList<>();
+
+    private RelativeLayout bottomLayout;
+
+    int more, length; // to load more item in list view
+    String key_word;
 
     public SearchFragment() {
         // Required empty public constructor
@@ -57,7 +66,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         // Inflate the layout for this fragment
         final View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-
+        bottomLayout = view.findViewById(R.id.loadItemsLayout_listView);
 
         // ListView
         list = view.findViewById(R.id.list_article);
@@ -75,23 +84,44 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
         searchView.setIconifiedByDefault(false);
         searchView.setOnQueryTextListener(this);
 
+        moreButton = view.findViewById(R.id.more_button);
+        moreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                updateListView();
+            }
+        });
+
+
+
         return view;
+    }
+
+    private void updateListView() {
+        bottomLayout.setVisibility(View.VISIBLE);
+        more += 10;
+        length += 10;
+        new SearchArticleTask().execute(key_word, String.valueOf(more), String.valueOf(length));
+
     }
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        adapter.filter(); // Clear
+        adapter.filter();
         length = 10;
         more = 0;
+        key_word = query; // to update listview
         SearchArticleTask process = new SearchArticleTask(); // Search article in background
         process.execute(query, String.valueOf(more), String.valueOf(length));
         searchView.clearFocus();
+        bottomLayout.setVisibility(View.VISIBLE);
         return true;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         adapter.filter();
+        moreButton.setVisibility(View.GONE);
         return true;
     }
 
@@ -161,8 +191,6 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             return info;
         }
 
-
-
         protected void onPreExecute() {
             articleNameList = new String[10];
             articleDescriptionList = new String[10];
@@ -177,7 +205,7 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
             int loadLength = Integer.parseInt(articleLength);
             int loadMore = Integer.parseInt(articleMore);
             try {
-                originURL = new URL("https://en.wikipedia.org/w/api.php?format=json&action=opensearch&limit=5&namespace=0&profile=engine_autoselect&search="+articleTitle);
+                originURL = new URL("https://en.wikipedia.org/w/api.php?format=json&action=opensearch&limit=50&namespace=0&profile=engine_autoselect&search="+articleTitle);
                 HttpsURLConnection httpsURLConnection = (HttpsURLConnection) originURL.openConnection();
 //                httpsURLConnection.setRequestMethod("GET");
 //                httpsURLConnection.addRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:63.0) Gecko/20100101 Firefox/63.0");
@@ -195,11 +223,14 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
                     loadLength = title.length();
                 }
 
+
+                int j = 0;
                 for (int i = loadMore; i < loadLength; i++) {
-                    articleNameList[i] = title.getString(i);
-                    Info info = parseInfo(articleNameList[i]);
-                    articleImageList[i] = info.getBmp();
-                    articleDescriptionList[i] = info.getDesc();
+                    articleNameList[j] = title.getString(i);
+                    Info info = parseInfo(articleNameList[j]);
+                    articleImageList[j] = info.getBmp();
+                    articleDescriptionList[j] = info.getDesc();
+                    j++;
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -216,15 +247,23 @@ public class SearchFragment extends Fragment implements SearchView.OnQueryTextLi
 
         protected void onPostExecute(Boolean success) {
             if (!success) {
-                Toast.makeText(getActivity(), "No Result", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "No Network", Toast.LENGTH_SHORT).show();
             } else {
-                int j = 0;
-                while (j < 5) {
-                    ArticleRepo articleRepo = new ArticleRepo(articleNameList[j], articleDescriptionList[j], articleImageList[j]);
-                    //Binds all object into an array
-                    arrayList.add(articleRepo);
+                if (articleNameList[0] != null) {
+                    int j = 0;
+                    while (j < articleNameList.length) {
+                        ArticleRepo articleRepo = new ArticleRepo(articleNameList[j], articleDescriptionList[j], articleImageList[j]);
+                        //Binds all object into an array
+                        arrayList.add(articleRepo);
+                        j++;
+                    }
                     adapter.notifyDataSetChanged();
-                    j++;
+                    Toast.makeText(getActivity(), "Updated", Toast.LENGTH_SHORT).show();
+                    bottomLayout.setVisibility(View.GONE);
+                    moreButton.setVisibility(View.VISIBLE);
+                } else {
+                    bottomLayout.setVisibility(View.GONE);
+                    Toast.makeText(getActivity(), "No results", Toast.LENGTH_SHORT).show();
                 }
             }
         }

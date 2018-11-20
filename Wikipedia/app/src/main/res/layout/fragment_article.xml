@@ -29,7 +29,6 @@
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Test"
                 android:padding="4dp"
                 android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -41,7 +40,6 @@
                 android:layout_below="@id/title"
                 android:padding="4dp"
                 android:textAppearance="?android:attr/textAppearanceSmall"
-                android:text="@string/hello_blank_fragment"
                 android:maxLines="5"
                 android:ellipsize="end"/>
 
