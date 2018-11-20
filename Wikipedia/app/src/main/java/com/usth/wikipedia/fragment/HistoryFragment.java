@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.usth.wikipedia.DetailArticleActivity;
 import com.usth.wikipedia.R;
 import com.usth.wikipedia.fragment.search.ListViewAdapter;
 import com.usth.wikipedia.model.ArticleRepo;
@@ -37,7 +38,6 @@ import java.util.Map;
  * A simple {@link Fragment} subclass.
  */
 public class HistoryFragment extends Fragment {
-    private String SHARED_PREFERENCES_NAME = "history";
     private ListViewAdapter adapter;
     private ListView list;
     //    private String[] articleNameList;
@@ -60,7 +60,7 @@ public class HistoryFragment extends Fragment {
         adapter.filter();
         list.setAdapter(adapter);
 
-        SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
+        SharedPreferences sharedPreferences = getContext().getSharedPreferences("history", Context.MODE_PRIVATE);
         Map<String, ?> allEntries = sharedPreferences.getAll();
         for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
             new FindArticleTask().execute(entry.getKey());

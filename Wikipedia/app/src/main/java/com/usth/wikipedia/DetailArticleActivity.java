@@ -32,7 +32,6 @@ import java.util.Iterator;
 
 public class DetailArticleActivity extends AppCompatActivity implements View.OnClickListener {
     public static final String EXTRA_ARTICLETITLE = "articleTitle";
-    public static final String SHARED_PREFERENCES_NAME_HISTORY = "history";
     private EditText detail_content_article;
     private ImageButton edit_button;
     private ImageView detail_image_article;
@@ -44,13 +43,7 @@ public class DetailArticleActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_detail_article);
 
         String articleTitle = (String) getIntent().getExtras().get(EXTRA_ARTICLETITLE); // Get article's row ID
-        SharedPreferences sharedPreferences = getSharedPreferences(SHARED_PREFERENCES_NAME_HISTORY, Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        String articlesTitle = sharedPreferences.getString(articleTitle,"");
-        if(articlesTitle == "")
-            editor.putString(articleTitle, articleTitle);
 
-        Log.d("ok", articleTitle);
 
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
