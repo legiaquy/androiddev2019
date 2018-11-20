@@ -105,14 +105,7 @@ public class ArticleFragment extends Fragment {
         cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String SHARED_PREFERENCES_NAME = "history";
-                SharedPreferences sharedPreferences = getContext().getSharedPreferences(SHARED_PREFERENCES_NAME_HISTORY, Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                String articlesTitle = sharedPreferences.getString(titleTemp,"");
-                if(articlesTitle == "")
-                    editor.putString(titleTemp, titleTemp);
-
-                Log.d("ok", titleTemp);
+//                String SHARED_PREFERENCES_NAME = "history"
 
                 Intent intent = new Intent(view.getContext(), DetailArticleActivity.class);
                 intent.putExtra(DetailArticleActivity.EXTRA_ARTICLETITLE, parseTitle);
